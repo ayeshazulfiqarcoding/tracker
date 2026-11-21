@@ -1,654 +1,1569 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cyber & Full-Stack Command Center (macOS Edition)</title>
-  <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Google Font: Inter -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
-  
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['Inter', 'sans-serif'],
-            mono: ['Fira Code', 'monospace'],
-          },
-          colors: {
-            brand: {
-              cyan: '#22d3ee',
-              blue: '#3b82f6',
-              purple: '#a855f7',
-              amber: '#f59e0b',
-              emerald: '#10b981',
-              rose: '#f43f5e'
-            }
-          }
-        }
-      }
-    }
-  </script>
-  
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cyber & Full-Stack Command Center | macOS Edition</title>
   <style>
-    /* Custom Sleek Scrollbar for Single-Line Nav & Content */
-    .custom-scrollbar::-webkit-scrollbar {
-      height: 6px;
-      width: 6px;
+    :root {
+      --bg-main: #070b14;
+      --bg-card: #0f172a;
+      --bg-card-alt: #131c31;
+      --bg-pill: #0d1424;
+      --border: #1e293b;
+      --border-hover: #334155;
+      --cyan: #22d3ee;
+      --blue: #60a5fa;
+      --purple: #c084fc;
+      --amber: #fbbf24;
+      --emerald: #34d399;
+      --rose: #fb7185;
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", "Segoe UI", Roboto, sans-serif;
+      --font-mono: "SF Mono", "JetBrains Mono", Menlo, Monaco, Consolas, monospace;
     }
-    .custom-scrollbar::-webkit-scrollbar-track {
-      background: rgba(15, 23, 42, 0.6);
-      border-radius: 9999px;
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      line-height: 1.5;
+      min-height: 100vh;
+      padding-bottom: 4rem;
     }
-    .custom-scrollbar::-webkit-scrollbar-thumb {
-      background: rgba(51, 65, 85, 0.8);
-      border-radius: 9999px;
+
+    .container {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 1.25rem 1.5rem;
     }
-    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-      background: rgba(34, 211, 238, 0.5);
+
+    /* Header */
+    .topbar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border);
     }
-    
-    /* Nav Button Styling */
+
+    .brand h1 {
+      font-size: 1.35rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .brand-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--cyan);
+      box-shadow: 0 0 10px var(--cyan);
+      display: inline-block;
+    }
+
+    .subtitle {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+      margin-top: 0.25rem;
+    }
+
+    .top-actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .btn {
+      background: var(--bg-card);
+      color: var(--text-main);
+      border: 1px solid var(--border);
+      padding: 0.45rem 0.85rem;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: all 0.18s ease;
+      user-select: none;
+    }
+
+    .btn:hover {
+      border-color: var(--cyan);
+      color: var(--cyan);
+    }
+
+    .btn-primary {
+      background: rgba(34, 211, 238, 0.14);
+      border-color: var(--cyan);
+      color: var(--cyan);
+    }
+
+    .btn-primary:hover {
+      background: rgba(34, 211, 238, 0.24);
+    }
+
+    .btn-danger:hover {
+      border-color: var(--rose);
+      color: var(--rose);
+    }
+
+    /* Global Progress Strip */
+    .global-progress-wrap {
+      margin: 0.9rem 0;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 0.65rem 1rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .progress-label {
+      font-size: 0.78rem;
+      font-family: var(--font-mono);
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+
+    .progress-track {
+      flex: 1;
+      height: 8px;
+      background: #1e293b;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--cyan), var(--blue), var(--purple));
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    /* SINGLE-LINE UNIFIED NAVIGATION BAR */
+    .nav-wrapper {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      background: rgba(7, 11, 20, 0.94);
+      backdrop-filter: blur(10px);
+      padding: 0.65rem 0;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 1.5rem;
+    }
+
+    .single-line-nav {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: nowrap;
+      align-items: center;
+      gap: 0.5rem;
+      overflow-x: auto;
+      white-space: nowrap;
+      padding-bottom: 4px;
+      scrollbar-width: thin;
+      scrollbar-color: #334155 transparent;
+    }
+
+    .single-line-nav::-webkit-scrollbar {
+      height: 4px;
+    }
+
+    .single-line-nav::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 999px;
+    }
+
     .nav-pill {
+      flex-shrink: 0;
       display: inline-flex;
       align-items: center;
       gap: 0.5rem;
-      padding: 0.5rem 0.85rem;
-      border-radius: 0.5rem;
-      font-size: 0.85rem;
-      font-weight: 500;
-      white-space: nowrap;
-      transition: all 0.2s ease-in-out;
-      border: 1px solid rgba(51, 65, 85, 0.5);
-      background-color: #0f172a;
-      color: #94a3b8;
+      padding: 0.55rem 0.9rem;
+      border-radius: 10px;
+      background: var(--bg-pill);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      font-size: 0.82rem;
+      font-weight: 600;
       cursor: pointer;
       user-select: none;
+      transition: all 0.2s ease;
+    }
+
+    .nav-pill svg {
+      width: 15px;
+      height: 15px;
       flex-shrink: 0;
     }
-    
+
     .nav-pill:hover {
-      background-color: #1e293b;
-      color: #f8fafc;
-      border-color: #475569;
-    }
-    
-    .nav-pill.active {
-      border: 1px solid #22d3ee !important;
-      background: rgba(34, 211, 238, 0.12) !important;
-      color: #22d3ee !important;
-      box-shadow: 0 0 15px rgba(34, 211, 238, 0.25) !important;
+      border-color: var(--border-hover);
+      color: var(--text-main);
+      background: var(--bg-card);
     }
 
-    /* Glow utilities */
-    .glow-cyan { box-shadow: 0 0 15px rgba(34, 211, 238, 0.2); }
-    .glow-purple { box-shadow: 0 0 15px rgba(168, 85, 247, 0.2); }
-    .glow-amber { box-shadow: 0 0 15px rgba(245, 158, 11, 0.2); }
+    .nav-pill.active {
+      border-color: var(--cyan);
+      background: rgba(34, 211, 238, 0.12);
+      color: var(--cyan);
+      box-shadow: 0 0 15px rgba(34, 211, 238, 0.22);
+    }
+
+    .count-badge {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      padding: 0.05rem 0.35rem;
+      border-radius: 5px;
+      background: rgba(255, 255, 255, 0.06);
+      color: inherit;
+    }
+
+    /* Views */
+    .tab-view { display: none; }
+    .tab-view.active { display: block; animation: fadeIn 0.2s ease; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Grids & Cards */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.2rem;
+      transition: border-color 0.2s ease;
+    }
+
+    .card:hover {
+      border-color: var(--border-hover);
+    }
+
+    .kpi-title {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .kpi-val {
+      font-size: 1.65rem;
+      font-weight: 700;
+      font-family: var(--font-mono);
+      margin-top: 0.35rem;
+      color: var(--cyan);
+    }
+
+    .kpi-sub {
+      font-size: 0.78rem;
+      color: var(--text-dim);
+      margin-top: 0.25rem;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+      gap: 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .bento-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+      gap: 1.1rem;
+    }
+
+    .section-header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.1rem;
+    }
+
+    .section-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    /* Filter Bar */
+    .filter-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.65rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .input, .select {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      color: var(--text-main);
+      padding: 0.5rem 0.85rem;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-family: var(--font-sans);
+      outline: none;
+    }
+
+    .input:focus, .select:focus {
+      border-color: var(--cyan);
+    }
+
+    .input { min-width: 240px; flex: 1; }
+
+    /* Checklists */
+    .task-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+      margin-top: 0.75rem;
+    }
+
+    .task-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.6rem;
+      font-size: 0.85rem;
+      color: var(--text-main);
+      cursor: pointer;
+      padding: 0.35rem 0.5rem;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .task-item:hover {
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .task-item input[type="checkbox"] {
+      accent-color: var(--cyan);
+      width: 16px;
+      height: 16px;
+      margin-top: 2px;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .task-item.done span {
+      text-decoration: line-through;
+      color: var(--text-dim);
+    }
+
+    /* Tags & Links */
+    .tag {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      padding: 0.18rem 0.55rem;
+      border-radius: 6px;
+      background: rgba(34, 211, 238, 0.12);
+      color: var(--cyan);
+      border: 1px solid rgba(34, 211, 238, 0.25);
+      display: inline-block;
+    }
+
+    .tag-amber {
+      background: rgba(251, 191, 36, 0.12);
+      color: var(--amber);
+      border-color: rgba(251, 191, 36, 0.25);
+    }
+
+    .tag-purple {
+      background: rgba(192, 132, 252, 0.12);
+      color: var(--purple);
+      border-color: rgba(192, 132, 252, 0.25);
+    }
+
+    .tag-emerald {
+      background: rgba(52, 211, 153, 0.12);
+      color: var(--emerald);
+      border-color: rgba(52, 211, 153, 0.25);
+    }
+
+    .ext-link {
+      color: var(--cyan);
+      text-decoration: none;
+      font-size: 0.8rem;
+      font-family: var(--font-mono);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      margin-top: 0.6rem;
+    }
+
+    .ext-link:hover { text-decoration: underline; }
+
+    /* Code Blocks */
+    pre {
+      background: #050811;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1rem;
+      overflow-x: auto;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: #e2e8f0;
+      margin-top: 0.75rem;
+      line-height: 1.55;
+    }
+
+    /* Pomodoro Timer */
+    .timer-display {
+      font-family: var(--font-mono);
+      font-size: 2.4rem;
+      font-weight: 700;
+      color: var(--cyan);
+      margin: 0.6rem 0;
+    }
+
+    /* Tables */
+    .table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: var(--bg-card);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.84rem;
+      text-align: left;
+    }
+
+    th, td {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    th {
+      background: #0b1120;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+    }
+
+    /* Modal */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.75);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      padding: 1rem;
+    }
+
+    .modal-backdrop.open { display: flex; }
+
+    .modal {
+      background: var(--bg-card);
+      border: 1px solid var(--border-hover);
+      border-radius: 14px;
+      padding: 1.5rem;
+      width: 100%;
+      max-width: 460px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      margin-bottom: 0.9rem;
+    }
+
+    .form-group label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .status-pill {
+      cursor: pointer;
+      user-select: none;
+    }
   </style>
 </head>
-
-<body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex flex-col antialiased selection:bg-cyan-500 selection:text-slate-950">
-
-  <!-- TOP HEADER AREA -->
-  <header class="border-b border-slate-800 bg-slate-900/90 backdrop-blur sticky top-0 z-40">
-    <div class="max-w-7xl mx-auto px-4 py-3 flex flex-col md:flex-row md:items-center justify-between gap-4">
-      <!-- Title & Subtitle Badge -->
-      <div>
-        <div class="flex items-center gap-3">
-          <h1 class="text-xl md:text-2xl font-extrabold tracking-tight bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 bg-clip-text text-transparent">
-            Cyber & Full-Stack Command Center
-          </h1>
-          <span class="text-xs px-2.5 py-0.5 rounded-full font-mono bg-cyan-950 text-cyan-400 border border-cyan-800/60 font-medium">
-            macOS Edition
-          </span>
-        </div>
-        <p class="text-xs text-slate-400 mt-1 font-mono flex items-center gap-2">
-          <span>Dec 5, 2026 – Jan 15, 2027</span>
-          <span class="text-slate-600">•</span>
-          <span class="text-cyan-400 font-semibold">42 Days Sprint</span>
-          <span class="text-slate-600">•</span>
-          <span>Apple Silicon Optimized</span>
-        </p>
+<body>
+  <div class="container">
+    <!-- Top Header -->
+    <header class="topbar">
+      <div class="brand">
+        <h1><span class="brand-dot"></span> Cyber &amp; Full-Stack Command Center</h1>
+        <div class="subtitle">Dec 5, 2026 – Jan 15, 2027 • 42 Days • 13 Disciplines • macOS Edition</div>
       </div>
+      <div class="top-actions">
+        <button class="btn" onclick="exportBackup()">Export JSON</button>
+        <label class="btn" style="margin:0;">
+          Import JSON
+          <input type="file" id="importFile" accept=".json" style="display:none" onchange="importBackup(event)" />
+        </label>
+        <button class="btn btn-danger" onclick="resetAllData()">Reset</button>
+      </div>
+    </header>
 
-      <!-- Global Controls & Progress Tracker -->
-      <div class="flex items-center gap-4">
-        <div class="flex flex-col items-end min-w-[160px]">
-          <div class="flex items-center justify-between w-full text-xs font-mono mb-1">
-            <span class="text-slate-400">GLOBAL PROGRESS</span>
-            <span id="global-progress-text" class="text-cyan-400 font-bold">0%</span>
-          </div>
-          <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden border border-slate-700/50">
-            <div id="global-progress-bar" class="bg-gradient-to-r from-cyan-500 via-blue-500 to-purple-500 h-full w-0 transition-all duration-500"></div>
-          </div>
-        </div>
-
-        <div class="flex items-center gap-2">
-          <button onclick="exportData()" title="Export Backup JSON" class="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition flex items-center gap-1.5 text-xs font-mono">
-            <svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-            <span class="hidden sm:inline">Export</span>
-          </button>
-
-          <label title="Import Restore JSON" class="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition flex items-center gap-1.5 text-xs font-mono cursor-pointer">
-            <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
-            <span class="hidden sm:inline">Import</span>
-            <input type="file" id="import-file" accept=".json" onchange="importData(event)" class="hidden">
-          </label>
-
-          <button onclick="resetData()" title="Reset All States" class="p-2 rounded-lg bg-slate-800 hover:bg-rose-950/40 text-slate-400 hover:text-rose-400 border border-slate-700 hover:border-rose-800/50 transition flex items-center gap-1 text-xs font-mono">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
-          </button>
-        </div>
+    <!-- Global Progress Bar -->
+    <div class="global-progress-wrap">
+      <span class="progress-label" id="globalProgressText">OVERALL PROGRESS: 0% (0/0 TASKS)</span>
+      <div class="progress-track">
+        <div class="progress-fill" id="globalProgressFill"></div>
       </div>
     </div>
 
-    <!-- MANDATORY SINGLE-LINE UNIFIED NAVIGATION BAR -->
-    <div class="border-t border-slate-800/80 bg-slate-900/60">
-      <nav class="max-w-7xl mx-auto px-4 flex flex-row flex-nowrap items-center gap-2 overflow-x-auto whitespace-nowrap py-2.5 custom-scrollbar select-none" id="main-nav">
-        
-        <!-- Tab 1: Overview & Command Hub -->
-        <button onclick="switchTab('tab-overview')" id="btn-tab-overview" class="nav-pill active">
-          <svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"></path></svg>
-          <span>Overview & Command Hub</span>
+    <!-- SINGLE-LINE UNIFIED NAVIGATION BAR (ALL 9 TABS IN ONE ROW) -->
+    <div class="nav-wrapper">
+      <nav class="single-line-nav" id="mainNav" aria-label="Command Center Navigation">
+        <button class="nav-pill active" data-tab="overview" onclick="switchTab('overview')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#22d3ee" stroke-width="2"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg>
+          Overview &amp; Command Hub
         </button>
 
-        <!-- Tab 2: Day-by-Day Roadmap (42 Days) -->
-        <button onclick="switchTab('tab-roadmap')" id="btn-tab-roadmap" class="nav-pill">
-          <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-          <span>Day-by-Day Roadmap (42 Days)</span>
+        <button class="nav-pill" data-tab="roadmap" onclick="switchTab('roadmap')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          Day-by-Day Roadmap (42 Days)
         </button>
 
-        <!-- Tab 3: Resources & Certs Vault ( 34 ) -->
-        <button onclick="switchTab('tab-resources')" id="btn-tab-resources" class="nav-pill">
-          <svg class="w-4 h-4 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
-          <span>Resources & Certs Vault ( <span id="nav-res-count" class="font-mono text-purple-300">34</span> )</span>
+        <button class="nav-pill" data-tab="vault" onclick="switchTab('vault')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#c084fc" stroke-width="2"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="8" cy="12" r="2"/><path d="M15 10h3M15 14h3"/></svg>
+          Resources &amp; Certs Vault ( <span class="count-badge" id="vaultCountBadge">34</span> )
         </button>
 
-        <!-- Tab 4: Projects & Idea Store ( 15 ) -->
-        <button onclick="switchTab('tab-projects')" id="btn-tab-projects" class="nav-pill">
-          <svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-          <span>Projects & Idea Store ( <span id="nav-proj-count" class="font-mono text-amber-300">15</span> )</span>
+        <button class="nav-pill" data-tab="projects" onclick="switchTab('projects')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/></svg>
+          Projects &amp; Idea Store ( <span class="count-badge" id="projectCountBadge">15</span> )
         </button>
 
-        <!-- Tab 5: 42-Day Bento Grid -->
-        <button onclick="switchTab('tab-bento')" id="btn-tab-bento" class="nav-pill">
-          <svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
-          <span>42-Day Bento Grid</span>
+        <button class="nav-pill" data-tab="bento" onclick="switchTab('bento')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#22d3ee" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
+          42-Day Bento Grid
         </button>
 
-        <!-- Tab 6: C++ macOS Lab -->
-        <button onclick="switchTab('tab-cpp')" id="btn-tab-cpp" class="nav-pill">
-          <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
-          <span>C++ macOS Lab</span>
+        <button class="nav-pill" data-tab="cpp" onclick="switchTab('cpp')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          C++ macOS Lab
         </button>
 
-        <!-- Tab 7: Deliverables (13) -->
-        <button onclick="switchTab('tab-deliverables')" id="btn-tab-deliverables" class="nav-pill">
-          <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path></svg>
-          <span>Deliverables (13)</span>
+        <button class="nav-pill" data-tab="deliverables" onclick="switchTab('deliverables')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg>
+          Deliverables (13)
         </button>
 
-        <!-- Tab 8: Resource Vault -->
-        <button onclick="switchTab('tab-cheatsheets')" id="btn-tab-cheatsheets" class="nav-pill">
-          <svg class="w-4 h-4 text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 01-2-2V5a2 2 0 012-2h14a2 2 0 012 2v1a2 2 0 01-2 2M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"></path></svg>
-          <span>Resource Vault</span>
+        <button class="nav-pill" data-tab="cheatsheets" onclick="switchTab('cheatsheets')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+          Resource Vault
         </button>
 
-        <!-- Tab 9: Monetization -->
-        <button onclick="switchTab('tab-monetization')" id="btn-tab-monetization" class="nav-pill">
-          <svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-          <span>Monetization</span>
+        <button class="nav-pill" data-tab="monetization" onclick="switchTab('monetization')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/><path d="M12 18V6"/></svg>
+          Monetization
         </button>
-
       </nav>
     </div>
-  </header>
-
-  <!-- MAIN CONTAINER AREA FOR TAB PANELS -->
-  <main class="max-w-7xl mx-auto px-4 py-6 flex-1 w-full">
 
     <!-- TAB 1: OVERVIEW & COMMAND HUB -->
-    <section id="tab-overview" class="tab-panel space-y-6">
-      <!-- KPI Stats Grid -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div class="p-4 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-between">
-          <div>
-            <p class="text-xs font-mono text-slate-400">OVERALL PROGRESS</p>
-            <p id="kpi-progress" class="text-2xl font-black text-cyan-400 mt-1">0%</p>
-          </div>
-          <div class="p-3 rounded-lg bg-cyan-950/60 border border-cyan-800/40 text-cyan-400">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
-          </div>
+    <section id="view-overview" class="tab-view active">
+      <div class="kpi-grid">
+        <div class="card">
+          <div class="kpi-title">Sprint Completion</div>
+          <div class="kpi-val" id="kpiPercent">0%</div>
+          <div class="kpi-sub" id="kpiTaskCount">0 of 0 tasks completed</div>
         </div>
-
-        <div class="p-4 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-between">
-          <div>
-            <p class="text-xs font-mono text-slate-400">TASKS COMPLETED</p>
-            <p id="kpi-tasks" class="text-2xl font-black text-emerald-400 mt-1">0 / 0</p>
-          </div>
-          <div class="p-3 rounded-lg bg-emerald-950/60 border border-emerald-800/40 text-emerald-400">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-          </div>
+        <div class="card">
+          <div class="kpi-title">Sprint Window</div>
+          <div class="kpi-val" style="color:var(--blue)">42 Days</div>
+          <div class="kpi-sub">Dec 5, 2026 → Jan 15, 2027</div>
         </div>
-
-        <div class="p-4 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-between">
-          <div>
-            <p class="text-xs font-mono text-slate-400">ACTIVE STREAK</p>
-            <p id="kpi-streak" class="text-2xl font-black text-amber-400 mt-1">42 Days</p>
-          </div>
-          <div class="p-3 rounded-lg bg-amber-950/60 border border-amber-800/40 text-amber-400">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"></path></svg>
-          </div>
+        <div class="card">
+          <div class="kpi-title">Vault &amp; Projects</div>
+          <div class="kpi-val" style="color:var(--purple)" id="kpiAssets">34 / 15</div>
+          <div class="kpi-sub">Curated Resources / Build Ideas</div>
         </div>
-
-        <div class="p-4 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-between">
-          <div>
-            <p class="text-xs font-mono text-slate-400">TARGET COMPLETION</p>
-            <p class="text-2xl font-black text-purple-400 mt-1">Jan 15, 2027</p>
-          </div>
-          <div class="p-3 rounded-lg bg-purple-950/60 border border-purple-800/40 text-purple-400">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-          </div>
+        <div class="card">
+          <div class="kpi-title">Shipped Capstones</div>
+          <div class="kpi-val" style="color:var(--emerald)" id="kpiDeliverables">0 / 13</div>
+          <div class="kpi-sub">GitHub-ready portfolio proofs</div>
         </div>
       </div>
 
-      <!-- Pomodoro Timer + Today's Priority Focus -->
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <!-- Pomodoro Focus Timer -->
-        <div class="p-6 rounded-2xl bg-slate-900 border border-slate-800 flex flex-col justify-between">
-          <div>
-            <div class="flex items-center justify-between mb-4">
-              <h3 class="text-base font-bold flex items-center gap-2 text-cyan-400">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                Pomodoro Focus Timer
-              </h3>
-              <span id="pomo-mode" class="text-xs font-mono px-2 py-0.5 rounded bg-slate-800 text-slate-300">Focus Mode</span>
-            </div>
-            <div class="text-center py-6">
-              <div id="pomo-display" class="text-6xl font-black font-mono tracking-tight text-slate-100">25:00</div>
-              <p id="pomo-subtext" class="text-xs text-slate-400 mt-2">Deep Work Session (25 Minutes)</p>
-            </div>
-          </div>
-          <div class="flex items-center justify-center gap-3 mt-4">
-            <button id="pomo-toggle-btn" onclick="togglePomodoro()" class="px-5 py-2.5 rounded-lg bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-sm transition">
-              Start Session
-            </button>
-            <button onclick="resetPomodoro()" class="px-4 py-2.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-sm font-semibold transition">
-              Reset
-            </button>
-            <button onclick="switchPomoMode()" class="px-3 py-2.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 text-xs font-mono transition">
-              Mode
-            </button>
+      <div class="two-col">
+        <div class="card">
+          <div class="section-title">Deep Work Focus Timer (macOS)</div>
+          <p class="kpi-sub">Run 25-minute C++ / Cybersecurity sprints with 5-minute resets.</p>
+          <div class="timer-display" id="timerDisplay">25:00</div>
+          <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+            <button class="btn btn-primary" onclick="startTimer()">Start</button>
+            <button class="btn" onclick="pauseTimer()">Pause</button>
+            <button class="btn" onclick="resetTimer(25)">25m Sprint</button>
+            <button class="btn" onclick="resetTimer(5)">5m Break</button>
           </div>
         </div>
 
-        <!-- Today's Priority Focus Checklist -->
-        <div class="lg:col-span-2 p-6 rounded-2xl bg-slate-900 border border-slate-800">
-          <div class="flex items-center justify-between mb-4">
-            <h3 class="text-base font-bold text-slate-100 flex items-center gap-2">
-              <svg class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
-              Today's Priority Focus Checklist
-            </h3>
-            <span class="text-xs font-mono text-slate-400">Dec 5, 2026</span>
-          </div>
-          <div class="space-y-3" id="today-checklist-container">
-            <!-- Dynamic Priority Tasks injected via JS -->
-          </div>
+        <div class="card">
+          <div class="section-title">5-Phase Execution Architecture</div>
+          <ul class="task-list" id="phaseOverviewList"></ul>
         </div>
       </div>
 
-      <!-- Quick Phase Overview (Phases 1 - 5) -->
-      <div class="p-6 rounded-2xl bg-slate-900 border border-slate-800">
-        <h3 class="text-lg font-bold text-slate-100 mb-4 flex items-center gap-2">
-          <svg class="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
-          Sprint Phase Roadmap Overview (Dec 5, 2026 – Jan 15, 2027)
-        </h3>
-        <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
-          <div class="p-4 rounded-xl bg-slate-950 border border-cyan-900/50 hover:border-cyan-500/50 transition">
-            <span class="text-xs font-mono text-cyan-400 block mb-1">PHASE 1 (DAYS 1-8)</span>
-            <h4 class="font-bold text-sm text-slate-200">C++ Fundamentals & Environment</h4>
-            <p class="text-xs text-slate-400 mt-2">macOS Clang setup, pointers, memory, OOP structures & basic CLI tools.</p>
-          </div>
-          <div class="p-4 rounded-xl bg-slate-950 border border-blue-900/50 hover:border-blue-500/50 transition">
-            <span class="text-xs font-mono text-blue-400 block mb-1">PHASE 2 (DAYS 9-17)</span>
-            <h4 class="font-bold text-sm text-slate-200">Full-Stack & Web Dev Fundamentals</h4>
-            <p class="text-xs text-slate-400 mt-2">Modern HTML5/Tailwind, JavaScript ES6+, DOM manipulation & Cat Café web app.</p>
-          </div>
-          <div class="p-4 rounded-xl bg-slate-950 border border-purple-900/50 hover:border-purple-500/50 transition">
-            <span class="text-xs font-mono text-purple-400 block mb-1">PHASE 3 (DAYS 18-26)</span>
-            <h4 class="font-bold text-sm text-slate-200">Cybersecurity Labs & Networking</h4>
-            <p class="text-xs text-slate-400 mt-2">Linux CLI, Wireshark packet captures, TryHackMe CTF labs, TCP/IP fundamentals.</p>
-          </div>
-          <div class="p-4 rounded-xl bg-slate-950 border border-amber-900/50 hover:border-amber-500/50 transition">
-            <span class="text-xs font-mono text-amber-400 block mb-1">PHASE 4 (DAYS 27-35)</span>
-            <h4 class="font-bold text-sm text-slate-200">Creative Media & AI Automation</h4>
-            <p class="text-xs text-slate-400 mt-2">Blender 3D isometric modeling, ambient beat creation, video editing & AI bots.</p>
-          </div>
-          <div class="p-4 rounded-xl bg-slate-950 border border-emerald-900/50 hover:border-emerald-500/50 transition">
-            <span class="text-xs font-mono text-emerald-400 block mb-1">PHASE 5 (DAYS 36-42)</span>
-            <h4 class="font-bold text-sm text-slate-200">Capstone Polish & Launch</h4>
-            <p class="text-xs text-slate-400 mt-2">Final 13 deliverables checkoff, GitHub portfolio deployment & client monetization outreach.</p>
-          </div>
+      <div class="card">
+        <div class="section-header">
+          <div class="section-title">Launch Checklist (Dec 5 Kickoff)</div>
+          <span class="tag">macOS Apple Silicon Ready</span>
         </div>
+        <ul class="task-list" id="kickoffChecklist"></ul>
       </div>
     </section>
 
     <!-- TAB 2: DAY-BY-DAY ROADMAP (42 DAYS) -->
-    <section id="tab-roadmap" class="tab-panel hidden space-y-6">
-      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 p-4 rounded-xl bg-slate-900 border border-slate-800">
-        <div>
-          <h2 class="text-lg font-bold text-slate-100">42-Day Daily Action Plan</h2>
-          <p class="text-xs text-slate-400">Sat, Dec 5, 2026 to Fri, Jan 15, 2027 • Track daily tasks & study materials</p>
-        </div>
-        <!-- Search & Filter Controls -->
-        <div class="flex flex-wrap items-center gap-3">
-          <input type="text" id="roadmap-search" oninput="renderRoadmap()" placeholder="Search days or topics..." class="px-3 py-1.5 rounded-lg bg-slate-950 border border-slate-800 text-xs text-slate-200 focus:outline-none focus:border-cyan-500 w-48">
-          <select id="roadmap-phase-filter" onchange="renderRoadmap()" class="px-3 py-1.5 rounded-lg bg-slate-950 border border-slate-800 text-xs text-slate-300 focus:outline-none focus:border-cyan-500">
-            <option value="ALL">All Phases (42 Days)</option>
-            <option value="Phase 1">Phase 1: C++ & System Basics (Days 1-8)</option>
-            <option value="Phase 2">Phase 2: Full-Stack Web Development (Days 9-17)</option>
-            <option value="Phase 3">Phase 3: Cyber Security & Networking (Days 18-26)</option>
-            <option value="Phase 4">Phase 4: Creative & AI Automation (Days 27-35)</option>
-            <option value="Phase 5">Phase 5: Capstones & Monetization Launch (Days 36-42)</option>
-          </select>
-        </div>
+    <section id="view-roadmap" class="tab-view">
+      <div class="section-header">
+        <div class="section-title">Day-by-Day Roadmap (Dec 5, 2026 – Jan 15, 2027)</div>
       </div>
-
-      <div id="roadmap-container" class="space-y-4">
-        <!-- Dynamic 42 Days injected via JS -->
+      <div class="filter-bar">
+        <input type="text" class="input" id="roadmapSearch" placeholder="Search day, topic, C++, TryHackMe, Blender..." oninput="renderRoadmap()" />
+        <select class="select" id="roadmapPhaseFilter" onchange="renderRoadmap()">
+          <option value="ALL">All 5 Phases (Days 1–42)</option>
+          <option value="Phase 1">Phase 1: Core Systems &amp; C++ (Dec 5–13)</option>
+          <option value="Phase 2">Phase 2: Web Stack, Git &amp; Java (Dec 14–21)</option>
+          <option value="Phase 3">Phase 3: DSA, Linux &amp; Networking (Dec 22–29)</option>
+          <option value="Phase 4">Phase 4: Cybersecurity CTFs &amp; Blender (Dec 30–Jan 7)</option>
+          <option value="Phase 5">Phase 5: Creative, AI &amp; Monetization (Jan 8–15)</option>
+        </select>
       </div>
+      <div class="bento-grid" id="roadmapGrid"></div>
     </section>
 
-    <!-- TAB 3: RESOURCES & CERTS VAULT ( 34 ) -->
-    <section id="tab-resources" class="tab-panel hidden space-y-6">
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-xl bg-slate-900 border border-slate-800">
-        <div>
-          <h2 class="text-lg font-bold text-slate-100">Resources & Certifications Vault</h2>
-          <p class="text-xs text-slate-400">34 Curated Learning Hubs, Cert Prep Courses, & Practice Portals</p>
-        </div>
-        <div class="flex items-center gap-3">
-          <input type="text" id="res-search" oninput="renderResources()" placeholder="Search vault..." class="px-3 py-1.5 rounded-lg bg-slate-950 border border-slate-800 text-xs text-slate-200 focus:outline-none focus:border-purple-500">
-          <button onclick="openModal('modal-add-resource')" class="px-3 py-1.5 rounded-lg bg-purple-600 hover:bg-purple-500 text-white font-semibold text-xs transition flex items-center gap-1">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-            Add Resource
-          </button>
-        </div>
+    <!-- TAB 3: RESOURCES & CERTS VAULT (34) -->
+    <section id="view-vault" class="tab-view">
+      <div class="section-header">
+        <div class="section-title">Resources &amp; Certs Vault (<span id="vaultHeaderCount">34</span>)</div>
+        <button class="btn btn-primary" onclick="openModal('resourceModal')">+ Add Resource</button>
       </div>
-
-      <div id="resources-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        <!-- Dynamic Resources injected via JS -->
+      <div class="filter-bar">
+        <input type="text" class="input" id="vaultSearch" placeholder="Filter by platform, language, or certification..." oninput="renderVault()" />
+        <select class="select" id="vaultCatFilter" onchange="renderVault()">
+          <option value="ALL">All Categories</option>
+          <option value="C++ & DSA">C++ &amp; DSA</option>
+          <option value="Cybersecurity">Cybersecurity</option>
+          <option value="Web & Git">Web &amp; Git</option>
+          <option value="Linux & Net">Linux &amp; Net</option>
+          <option value="Java & CS">Java &amp; CS</option>
+          <option value="3D, Audio & AI">3D, Audio &amp; AI</option>
+          <option value="Remote Jobs">Remote Jobs</option>
+        </select>
       </div>
+      <div class="bento-grid" id="vaultGrid"></div>
     </section>
 
-    <!-- TAB 4: PROJECTS & IDEA STORE ( 15 ) -->
-    <section id="tab-projects" class="tab-panel hidden space-y-6">
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-xl bg-slate-900 border border-slate-800">
-        <div>
-          <h2 class="text-lg font-bold text-slate-100">Projects & Portfolio Idea Store</h2>
-          <p class="text-xs text-slate-400">15 Capstone Projects for full-stack, C++, cyber security & media</p>
-        </div>
-        <button onclick="openModal('modal-add-project')" class="px-3 py-1.5 rounded-lg bg-amber-600 hover:bg-amber-500 text-white font-semibold text-xs transition flex items-center gap-1">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-          Add Project Idea
-        </button>
+    <!-- TAB 4: PROJECTS & IDEA STORE (15) -->
+    <section id="view-projects" class="tab-view">
+      <div class="section-header">
+        <div class="section-title">Projects &amp; Idea Store (<span id="projectHeaderCount">15</span>)</div>
+        <button class="btn btn-primary" onclick="openModal('projectModal')">+ Add Project Idea</button>
       </div>
-
-      <div id="projects-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <!-- Dynamic Projects injected via JS -->
-      </div>
+      <div class="bento-grid" id="projectsGrid"></div>
     </section>
 
     <!-- TAB 5: 42-DAY BENTO GRID -->
-    <section id="tab-bento" class="tab-panel hidden space-y-6">
-      <div class="p-4 rounded-xl bg-slate-900 border border-slate-800">
-        <h2 class="text-lg font-bold text-slate-100">42-Day Sprint Bento Architecture</h2>
-        <p class="text-xs text-slate-400">Visual progress broken down by major skill modules & target learning blocks</p>
+    <section id="view-bento" class="tab-view">
+      <div class="section-header">
+        <div class="section-title">42-Day Discipline Bento Grid (13 Tracks)</div>
+        <span class="tag">Dec 5, 2026 – Jan 15, 2027</span>
       </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <!-- Bento Card 1: LearnCpp Modules -->
-        <div class="p-5 rounded-2xl bg-slate-900 border border-slate-800 flex flex-col justify-between space-y-4">
-          <div>
-            <div class="flex items-center justify-between mb-2">
-              <span class="text-xs font-mono text-cyan-400 bg-cyan-950/60 border border-cyan-800/40 px-2 py-0.5 rounded">Dec 5 - Dec 12</span>
-              <span id="bento-cpp-pct" class="text-xs font-mono font-bold text-slate-300">0%</span>
-            </div>
-            <h3 class="font-bold text-base text-slate-100 mb-1">C++20 & System Mastery</h3>
-            <p class="text-xs text-slate-400 mb-3">LearnCpp Chapters 1-10, Apple Silicon Clang, Memory Management & Dynamic Arrays.</p>
-            <div class="space-y-2">
-              <label class="flex items-center gap-2 text-xs text-slate-300 cursor-pointer">
-                <input type="checkbox" data-bento="bento_cpp_1" onchange="toggleTask(this)" class="rounded border-slate-700 bg-slate-950 text-cyan-500 focus:ring-0">
-                <span>LearnCpp Ch. 1-3 (Basics, Data Types, Functions)</span>
-              </label>
-              <label class="flex items-center gap-2 text-xs text-slate-300 cursor-pointer">
-                <input type="checkbox" data-bento="bento_cpp_2" onchange="toggleTask(this)" class="rounded border-slate-700 bg-slate-950 text-cyan-500 focus:ring-0">
-                <span>LearnCpp Ch. 4-6 (Scope, Pointers & References)</span>
-              </label>
-              <label class="flex items-center gap-2 text-xs text-slate-300 cursor-pointer">
-                <input type="checkbox" data-bento="bento_cpp_3" onchange="toggleTask(this)" class="rounded border-slate-700 bg-slate-950 text-cyan-500 focus:ring-0">
-                <span>LearnCpp Ch. 7-10 (OOP, Dynamic Memory & STL)</span>
-              </label>
-            </div>
-          </div>
-          <a href="https://www.learncpp.com" target="_blank" class="text-xs text-cyan-400 hover:underline flex items-center gap-1">Open LearnCpp.com &rarr;</a>
-        </div>
-
-        <!-- Bento Card 2: Full-Stack Web -->
-        <div class="p-5 rounded-2xl bg-slate-900 border border-slate-800 flex flex-col justify-between space-y-4">
-          <div>
-            <div class="flex items-center justify-between mb-2">
-              <span class="text-xs font-mono text-blue-400 bg-blue-950/60 border border-blue-800/40 px-2 py-0.5 rounded">Dec 13 - Dec 21</span>
-              <span id="bento-web-pct" class="text-xs font-mono font-bold text-slate-300">0%</span>
-            </div>
-            <h3 class="font-bold text-base text-slate-100 mb-1">Modern Web & UI Engine</h3>
-            <p class="text-xs text-slate-400 mb-3">Tailwind CSS layout, DOM Events, LocalStorage persistence & Responsive UI.</p>
-            <div class="space-y-2">
-              <label class="flex items-center gap-2 text-xs text-slate-300 cursor-pointer">
-                <input type="checkbox" data-bento="bento_web_1" onchange="toggleTask(this)" class="rounded border-slate-700 bg-slate-950 text-blue-500 focus:ring-0">
-                <span>Tailwind CSS grid/flex masterclass</span>
-              </label>
-              <label class="flex items-center gap-2 text-xs text-slate-300 cursor-pointer">
-                <input type="checkbox" data-bento="bento_web_2" onchange="toggleTask(this)" class="rounded border-slate-700 bg-slate-950 text-blue-500 focus:ring-0">
-                <span>Billi Baithak Cat Café Web UI</span>
-              </label>
-              <label class="flex items-center gap-2 text-xs text-slate-300 cursor-pointer">
-                <input type="checkbox" data-bento="bento_web_3" onchange="toggleTask(this)" class="rounded border-slate-700 bg-slate-950 text-blue-500 focus:ring-0">
-                <span>Single-file command dashboard state engine</span>
-              </label>
-            </div>
-          </div>
-          <a href="https://developer.mozilla.org" target="_blank" class="text-xs text-blue-400 hover:underline flex items-center gap-1">MDN Web Docs &rarr;</a>
-        </div>
-
-        <!-- Bento Card 3: Cyber Security & CTF -->
-        <div class="p-5 rounded-2xl bg-slate-900 border border-slate-800 flex flex-col justify-between space-y-4">
-          <div>
-            <div class="flex items-center justify-between mb-2">
-              <span class="text-xs font-mono text-purple-400 bg-purple-950/60 border border-purple-800/40 px-2 py-0.5 rounded">Dec 22 - Dec 30</span>
-              <span id="bento-cyber-pct" class="text-xs font-mono font-bold text-slate-300">0%</span>
-            </div>
-            <h3 class="font-bold text-base text-slate-100 mb-1">Cyber Ops & Networking Labs</h3>
-            <p class="text-xs text-slate-400 mb-3">Wireshark packet capture analysis, OverTheWire Bandit levels, TryHackMe CTFs.</p>
-            <div class="space-y-2">
-              <label class="flex items-center gap-2 text-xs text-slate-300 cursor-pointer">
-                <input type="checkbox" data-bento="bento_cyber_1" onchange="toggleTask(this)" class="rounded border-slate-700 bg-slate-950 text-purple-500 focus:ring-0">
-                <span>OverTheWire Bandit (Levels 0-15)</span>
-              </label>
-              <label class="flex items-center gap-2 text-xs text-slate-300 cursor-pointer">
-                <input type="checkbox" data-bento="bento_cyber_2" onchange="toggleTask(this)" class="rounded border-slate-700 bg-slate-950 text-purple-500 focus:ring-0">
-                <span>TryHackMe Pre-Security Path</span>
-              </label>
-              <label class="flex items-center gap-2 text-xs text-slate-300 cursor-pointer">
-                <input type="checkbox" data-bento="bento_cyber_3" onchange="toggleTask(this)" class="rounded border-slate-700 bg-slate-950 text-purple-500 focus:ring-0">
-                <span>C++ Packet Sniffer CLI prototype</span>
-              </label>
-            </div>
-          </div>
-          <a href="https://tryhackme.com" target="_blank" class="text-xs text-purple-400 hover:underline flex items-center gap-1">TryHackMe Portal &rarr;</a>
-        </div>
-      </div>
+      <div class="bento-grid" id="bentoDisciplineGrid"></div>
     </section>
 
     <!-- TAB 6: C++ MACOS LAB -->
-    <section id="tab-cpp" class="tab-panel hidden space-y-6">
-      <div class="p-6 rounded-2xl bg-slate-900 border border-slate-800 space-y-4">
-        <div class="flex items-center justify-between">
-          <div>
-            <h2 class="text-lg font-bold text-slate-100">Apple Silicon macOS C++ Setup</h2>
-            <p class="text-xs text-slate-400">Using Apple Clang compiler (`clang++ -std=c++20 -Wall -Wextra`) in VS Code</p>
-          </div>
-          <span class="text-xs font-mono px-3 py-1 rounded-full bg-blue-950 text-blue-400 border border-blue-800/50">c++20 mode</span>
-        </div>
-
-        <div class="p-4 rounded-xl bg-slate-950 border border-slate-800 font-mono text-xs text-slate-300 space-y-2">
-          <div class="flex items-center justify-between">
-            <span class="text-slate-400">// Terminal Compilation & Execution Command</span>
-            <button onclick="copyToClipboard('clang++ -std=c++20 -Wall -Wextra main.cpp -o main && ./main')" class="text-cyan-400 hover:text-cyan-300 font-sans text-xs">Copy</button>
-          </div>
-          <code class="block text-cyan-300">clang++ -std=c++20 -Wall -Wextra main.cpp -o main && ./main</code>
-        </div>
+    <section id="view-cpp" class="tab-view">
+      <div class="section-header">
+        <div class="section-title">C++20 macOS &amp; VS Code Lab</div>
+        <span class="tag">Apple Clang • Zero &lt;cmath&gt; Policy</span>
       </div>
+      <div class="two-col">
+        <div class="card">
+          <div class="section-title">1. Verify Apple Clang &amp; Compile in Terminal</div>
+          <p class="kpi-sub">Run in VS Code Integrated Terminal (<code>Ctrl + ~</code>) on your MacBook Air:</p>
+          <pre id="cppCmd1">xcode-select --install
+clang++ --version
+clang++ -std=c++20 -Wall -Wextra -O2 main.cpp -o app &amp;&amp; ./app</pre>
+          <button class="btn" style="margin-top:0.6rem;" onclick="copyText('cppCmd1')">Copy Terminal Commands</button>
 
-      <!-- VS Code tasks.json configuration -->
-      <div class="p-6 rounded-2xl bg-slate-900 border border-slate-800 space-y-3">
-        <div class="flex items-center justify-between">
-          <h3 class="font-bold text-sm text-slate-200">Recommended VS Code `.vscode/tasks.json`</h3>
-          <button onclick="copyToClipboard(document.getElementById('tasks-json-code').innerText)" class="text-cyan-400 hover:text-cyan-300 font-sans text-xs">Copy JSON</button>
-        </div>
-        <pre id="tasks-json-code" class="p-4 rounded-xl bg-slate-950 border border-slate-800 font-mono text-xs text-slate-300 overflow-x-auto">{
+          <div class="section-title" style="margin-top:1.25rem;">2. VS Code <code>.vscode/tasks.json</code></div>
+          <pre id="cppTasksJson">{
   "version": "2.0.0",
   "tasks": [
     {
+      "label": "Build C++20 (Clang)",
       "type": "shell",
-      "label": "Build C++20 with Clang",
-      "command": "/usr/bin/clang++",
-      "args": [
-        "-std=c++20",
-        "-Wall",
-        "-Wextra",
-        "-g",
-        "${file}",
-        "-o",
-        "${fileDirname}/${fileBasenameNoExtension}"
-      ],
-      "options": {
-        "cwd": "${fileDirname}"
-      },
-      "problemMatcher": ["$gcc"],
-      "group": {
-        "kind": "build",
-        "isDefault": true
-      }
+      "command": "clang++",
+      "args": ["-std=c++20", "-Wall", "-Wextra", "-g", "${file}", "-o", "${fileDirname}/${fileBasenameNoExtension}"],
+      "group": { "kind": "build", "isDefault": true }
     }
   ]
 }</pre>
-      </div>
-
-      <!-- Starter C++ Exercise (Strictly Standard Headers) -->
-      <div class="p-6 rounded-2xl bg-slate-900 border border-slate-800 space-y-3">
-        <div class="flex items-center justify-between">
-          <h3 class="font-bold text-sm text-slate-200">Starter C++20 Console App Code (`main.cpp`)</h3>
-          <button onclick="copyToClipboard(document.getElementById('cpp-starter-code').innerText)" class="text-cyan-400 hover:text-cyan-300 font-sans text-xs">Copy Code</button>
+          <button class="btn" style="margin-top:0.6rem;" onclick="copyText('cppTasksJson')">Copy tasks.json</button>
         </div>
-        <pre id="cpp-starter-code" class="p-4 rounded-xl bg-slate-950 border border-slate-800 font-mono text-xs text-emerald-400 overflow-x-auto">#include &lt;iostream&gt;
+
+        <div class="card">
+          <div class="section-title">3. Day 1 Starter: Log Analyzer (Standard Headers Only)</div>
+          <p class="kpi-sub">Uses strictly <code>&lt;iostream&gt;</code>, <code>&lt;vector&gt;</code>, <code>&lt;string&gt;</code>, and <code>&lt;algorithm&gt;</code>.</p>
+          <pre id="cppStarterCode">#include &lt;iostream&gt;
 #include &lt;vector&gt;
 #include &lt;string&gt;
-#include &lt;fstream&gt;
 #include &lt;algorithm&gt;
 
-// Cyber & Full-Stack Command Center - Starter CLI Module
-class TaskManager {
-private:
-    std::vector&lt;std::string&gt; tasks;
-
-public:
-    void addTask(const std::string&amp; task) {
-        tasks.push_back(task);
-        std::cout &lt;&lt; "[+] Task Added: " &lt;&lt; task &lt;&lt; "\n";
-    }
-
-    void displayTasks() const {
-        std::cout &lt;&lt; "\n=== CURRENT SPRINT TASKS ===\n";
-        for (size_t i = 0; i &lt; tasks.size(); ++i) {
-            std::cout &lt;&lt; " [" &lt;&lt; (i + 1) &lt;&lt; "] " &lt;&lt; tasks[i] &lt;&lt; "\n";
-        }
-    }
+struct AuditEvent {
+    std::string host;
+    std::string status;
+    int port;
 };
 
 int main() {
-    std::cout &lt;&lt; "=========================================\n";
-    std::cout &lt;&lt; "  Cyber Command Center CLI (macOS C++20)  \n";
-    std::cout &lt;&lt; "=========================================\n";
+    std::vector&lt;AuditEvent&gt; events = {
+        {"192.168.1.10", "OPEN", 22},
+        {"192.168.1.14", "FILTERED", 443},
+        {"192.168.1.22", "OPEN", 8080}
+    };
 
-    TaskManager manager;
-    manager.addTask("Configure macOS Clang Toolchain");
-    manager.addTask("Complete LearnCpp Pointers Chapter");
-    manager.addTask("Audit TryHackMe Linux Fundamentals");
-    
-    manager.displayTasks();
-
+    int openCount = 0;
+    for (const auto&amp; ev : events) {
+        if (ev.status == "OPEN") {
+            ++openCount;
+            std::cout &lt;&lt; "[ALERT] Host " &lt;&lt; ev.host
+                      &lt;&lt; " open on port " &lt;&lt; ev.port &lt;&lt; '\n';
+        }
+    }
+    std::cout &lt;&lt; "Total open ports: " &lt;&lt; openCount &lt;&lt; '\n';
     return 0;
 }</pre>
+          <button class="btn" style="margin-top:0.6rem;" onclick="copyText('cppStarterCode')">Copy C++20 Starter</button>
+        </div>
       </div>
     </section>
 
     <!-- TAB 7: DELIVERABLES (13) -->
-    <section id="tab-deliverables" class="tab-panel hidden space-y-6">
-      <div class="p-4 rounded-xl bg-slate-900 border border-slate-800">
-        <h2 class="text-lg font-bold text-slate-100">13 Core Capstone Deliverables</h2>
-        <p class="text-xs text-slate-400">Track verification & repository readiness across all 13 disciplines</p>
+    <section id="view-deliverables" class="tab-view">
+      <div class="section-header">
+        <div class="section-title">13 Capstone Deliverables Checklist</div>
+        <span class="tag tag-emerald">Target: Jan 15, 2027</span>
       </div>
-
-      <div id="deliverables-container" class="space-y-3">
-        <!-- Dynamic Deliverables injected via JS -->
-      </div>
+      <div class="bento-grid" id="deliverablesGrid"></div>
     </section>
 
     <!-- TAB 8: RESOURCE VAULT (CHEAT SHEETS) -->
-    <section id="tab-cheatsheets" class="tab-panel hidden space-y-6">
-      <div class="p-4 rounded-xl bg-slate-900 border border-slate-800">
-        <h2 class="text-lg font-bold text-slate-100">Quick Cheat Sheets & Terminal Command Vault</h2>
-        <p class="text-xs text-slate-400">Essential commands for macOS, Git, Linux privilege auditing, and VS Code shortcuts</p>
+    <section id="view-cheatsheets" class="tab-view">
+      <div class="section-header">
+        <div class="section-title">Quick-Reference Developer Cheat Sheets</div>
       </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <!-- Sheet 1: Git Workflow -->
-        <div class="p-5 rounded-2xl bg-slate-900 border border-slate-800 space-y-3">
-          <div class="flex items-center justify-between">
-            <h3 class="font-bold text-sm text-cyan-400">Git & GitHub Core Workflow</h3>
-            <button onclick="copyToClipboard('git status\ngit add .\ngit commit -m \'feat: update command hub\'\ngit push origin main')" class="text-xs text-slate-400 hover:text-white">Copy</button>
-          </div>
-          <pre class="p-3 rounded-lg bg-slate-950 font-mono text-xs text-slate-300">git status
+      <div class="two-col">
+        <div class="card">
+          <div class="section-title">Git &amp; GitHub Daily Workflow</div>
+          <pre id="csGit">git status
 git add .
-git commit -m "feat: sprint update"
-git branch -M main
-git push -u origin main</pre>
+git commit -m "feat: update command center"
+git push origin main
+
+# Create &amp; switch branch
+git checkout -b feature/cyber-lab</pre>
+          <button class="btn" style="margin-top:0.6rem;" onclick="copyText('csGit')">Copy Git Commands</button>
         </div>
 
-        <!-- Sheet 2: macOS Terminal & Zsh -->
-        <div class="p-5 rounded-2xl bg-slate-900 border border-slate-800 space-y-3">
-          <div class="flex items-center justify-between">
-            <h3 class="font-bold text-sm text-blue-400">macOS Terminal & Brew Essentials</h3>
-            <button onclick="copyToClipboard('brew update && brew upgrade\nbrew install cmake LLVM ninja')" class="text-xs text-slate-400 hover:text-white">Copy</button>
-          </div>
-          <pre class="p-3 rounded-lg bg-slate-950 font-mono text-xs text-slate-300">brew update && brew upgrade
-brew install cmake LLVM ninja
-lsof -i :8080 # Check open port
-kill -9 &lt;PID&gt; # Kill process</pre>
+        <div class="card">
+          <div class="section-title">Linux &amp; Networking Recon Essentials</div>
+          <pre id="csLinux"># Network &amp; Port Recon
+nmap -sC -sV -oN scan.txt 10.10.10.1
+ss -tulnp
+dig +short example.com
+
+# Linux Permissions &amp; Logs
+find / -perm -4000 2&gt;/dev/null
+grep -i "failed" /var/log/auth.log</pre>
+          <button class="btn" style="margin-top:0.6rem;" onclick="copyText('csLinux')">Copy Recon Commands</button>
         </div>
 
-        <!-- Sheet 3: Linux PrivEsc & Cyber Ops -->
-        <div class="p-5 rounded-2xl bg-slate-900 border border-slate-800 space-y-3">
-          <div class="flex items-center justify-between">
-            <h3 class="font-bold text-sm text-purple-400">Linux Audit & Network Recon</h3>
-            <button onclick="copyToClipboard('whoami && id\nfind / -perm -u=s -type f 2>/dev/null\nnmap -sV -sC 192.168.1.1')" class="text-xs text-slate-400 hover:text-white">Copy</button>
+        <div class="card">
+          <div class="section-title">macOS Zsh &amp; VS Code Shortcuts</div>
+          <pre id="csMac"># VS Code macOS Shortcuts
+Cmd + Shift + B   -&gt; Run Default C++ Build Task
+Ctrl + ~          -&gt; Toggle Integrated Terminal
+Cmd + P           -&gt; Quick File Open
+Cmd + Shift + P   -&gt; Command Palette
+
+# Check active port on macOS
+lsof -i :8080</pre>
+          <button class="btn" style="margin-top:0.6rem;" onclick="copyText('csMac')">Copy macOS Shortcuts</button>
+        </div>
+
+        <div class="card">
+          <div class="section-title">Java 26 Compilation &amp; Run</div>
+          <pre id="csJava">javac Main.java
+java Main
+
+# Package JAR
+jar cfe App.jar Main *.class</pre>
+          <button class="btn" style="margin-top:0.6rem;" onclick="copyText('csJava')">Copy Java Commands</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 9: MONETIZATION -->
+    <section id="view-monetization" class="tab-view">
+      <div class="section-header">
+        <div class="section-title">3-Stream Monetization Engine (Async &amp; No-Cam Friendly)</div>
+      </div>
+      <div class="bento-grid" id="monetizationStreams" style="margin-bottom:1.5rem;"></div>
+
+      <div class="card">
+        <div class="section-header">
+          <div class="section-title">Outreach &amp; Application Tracker</div>
+          <button class="btn btn-primary" onclick="openModal('appModal')">+ Log Application</button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Platform</th>
+                <th>Role / Opportunity</th>
+                <th>Stream</th>
+                <th>Date</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="applicationTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- MODAL: ADD RESOURCE -->
+  <div class="modal-backdrop" id="resourceModal">
+    <div class="modal">
+      <div class="section-title" style="margin-bottom:1rem;">Add Resource to Vault</div>
+      <div class="form-group">
+        <label>Title</label>
+        <input type="text" class="input" id="resTitle" placeholder="e.g., PortSwigger Web Security Academy" />
+      </div>
+      <div class="form-group">
+        <label>Category</label>
+        <select class="select" id="resCat">
+          <option value="C++ & DSA">C++ &amp; DSA</option>
+          <option value="Cybersecurity">Cybersecurity</option>
+          <option value="Web & Git">Web &amp; Git</option>
+          <option value="Linux & Net">Linux &amp; Net</option>
+          <option value="Java & CS">Java &amp; CS</option>
+          <option value="3D, Audio & AI">3D, Audio &amp; AI</option>
+          <option value="Remote Jobs">Remote Jobs</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>URL</label>
+        <input type="url" class="input" id="resUrl" placeholder="https://..." />
+      </div>
+      <div class="form-group">
+        <label>Notes</label>
+        <input type="text" class="input" id="resNote" placeholder="Key modules or labs to finish" />
+      </div>
+      <div style="display:flex; justify-content:flex-end; gap:0.5rem;">
+        <button class="btn" onclick="closeModal('resourceModal')">Cancel</button>
+        <button class="btn btn-primary" onclick="addResource()">Save Resource</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: ADD PROJECT -->
+  <div class="modal-backdrop" id="projectModal">
+    <div class="modal">
+      <div class="section-title" style="margin-bottom:1rem;">Add Project Idea</div>
+      <div class="form-group">
+        <label>Project Name</label>
+        <input type="text" class="input" id="projTitle" placeholder="e.g., Packet Header Parser CLI" />
+      </div>
+      <div class="form-group">
+        <label>Tech Stack</label>
+        <input type="text" class="input" id="projStack" placeholder="C++20, Linux, Git" />
+      </div>
+      <div class="form-group">
+        <label>Description</label>
+        <input type="text" class="input" id="projDesc" placeholder="What problem does it solve?" />
+      </div>
+      <div style="display:flex; justify-content:flex-end; gap:0.5rem;">
+        <button class="btn" onclick="closeModal('projectModal')">Cancel</button>
+        <button class="btn btn-primary" onclick="addProject()">Save Project</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: LOG APPLICATION -->
+  <div class="modal-backdrop" id="appModal">
+    <div class="modal">
+      <div class="section-title" style="margin-bottom:1rem;">Log Outreach / Application</div>
+      <div class="form-group">
+        <label>Platform</label>
+        <input type="text" class="input" id="appPlatform" placeholder="Remotive / We Work Remotely / Himalayas" />
+      </div>
+      <div class="form-group">
+        <label>Role / Pitch</label>
+        <input type="text" class="input" id="appRole" placeholder="Async Technical Chat Support / AI Evaluator" />
+      </div>
+      <div class="form-group">
+        <label>Stream</label>
+        <select class="select" id="appStream">
+          <option value="Remote Async Roles">Remote Async Roles</option>
+          <option value="Tech UGC & Open Source">Tech UGC &amp; Open Source</option>
+          <option value="Freelance & Automation">Freelance &amp; Automation</option>
+        </select>
+      </div>
+      <div style="display:flex; justify-content:flex-end; gap:0.5rem;">
+        <button class="btn" onclick="closeModal('appModal')">Cancel</button>
+        <button class="btn btn-primary" onclick="addApplication()">Add Entry</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const STORAGE_KEY = 'cyber_fullstack_cmd_center_v42';
+
+    const DEFAULT_KICKOFF = [
+      { id: 'ko1', text: 'Verify Apple Clang & VS Code C++20 build task on MacBook Air' },
+      { id: 'ko2', text: 'Deploy Command Center index.html to GitHub & Netlify' },
+      { id: 'ko3', text: 'Complete LearnCpp Chapters 0–1 and push first repo commit' },
+      { id: 'ko4', text: 'Configure TryHackMe & OverTheWire Bandit SSH access in macOS Terminal' }
+    ];
+
+    const DISCIPLINES = [
+      { id: 'd1', name: 'C++ Systems & CLI', dates: 'Dec 5 – Dec 13', deliverable: 'Console Security Log Analyzer & Playlist Engine (C++20)', link: 'https://www.learncpp.com/', tasks: ['LearnCpp Ch 1–4: Types, I/O & Control Flow', 'LearnCpp Ch 5–8: Functions, Scope & References', 'LearnCpp Ch 11–14: Vectors, Strings & File Streams', 'Build & push C++20 CLI tool to GitHub'] },
+      { id: 'd2', name: 'HTML5, CSS3 & Modern JS', dates: 'Dec 14 – Dec 18', deliverable: 'Interactive Cyber & Full-Stack Command Center Dashboard', link: 'https://www.theodinproject.com/', tasks: ['Semantic HTML5 & CSS Grid/Flexbox layouts', 'DOM manipulation, ES6+ modules & Fetch API', 'LocalStorage persistence & JSON export/import', 'Ship live responsive site via GitHub + Netlify'] },
+      { id: 'd3', name: 'Git & GitHub Workflows', dates: 'Dec 14 – Dec 21', deliverable: 'Structured Portfolio Repositories with Clean Commit History', link: 'https://learngitbranching.js.org/', tasks: ['SSH keys configured on macOS', 'Branching, merging & pull request drills', 'Write clean README.md with architecture notes'] },
+      { id: 'd4', name: 'Java OOP Architecture', dates: 'Dec 18 – Dec 21', deliverable: 'Modular Object-Oriented Inventory & Billing Engine (Java)', link: 'https://dev.java/learn/', tasks: ['Classes, inheritance, interfaces & polymorphism', 'Exception handling & file serialization', 'Refactor project cleanly into packages'] },
+      { id: 'd5', name: 'Data Structures & Algorithms', dates: 'Dec 22 – Dec 26', deliverable: '25 Solved Core DSA Problems in C++ (Arrays, Maps, Trees)', link: 'https://neetcode.io/', tasks: ['Arrays, Hashing & Two Pointers (8 problems)', 'Stacks, Queues & Linked Lists (7 problems)', 'Binary Search, Recursion & Trees (10 problems)'] },
+      { id: 'd6', name: 'Linux CLI & Bash Scripting', dates: 'Dec 25 – Dec 28', deliverable: 'Automated System Recon & Log Audit Bash Script', link: 'https://overthewire.org/wargames/bandit/', tasks: ['OverTheWire Bandit Levels 0–20', 'Permissions, processes, cron & grep/awk pipelines', 'Write automated recon bash utility'] },
+      { id: 'd7', name: 'Computer Networking', dates: 'Dec 27 – Dec 29', deliverable: 'Packet Analysis & Subnetting Lab Report (Cisco/Wireshark)', link: 'https://www.netacad.com/', tasks: ['OSI/TCP-IP stack, DNS, HTTP/S & TLS handshake', 'Subnetting & routing table drills', 'Inspect live TCP/DNS captures in Wireshark'] },
+      { id: 'd8', name: 'Cybersecurity & CTFs', dates: 'Dec 30 – Jan 4', deliverable: '10 Completed TryHackMe / HackTheBox Writeups on GitHub', link: 'https://tryhackme.com/', tasks: ['TryHackMe Pre-Security & Jr Penetration Tester rooms', 'Web exploitation basics (SQLi, XSS, IDOR)', 'Publish sanitized markdown CTF writeups'] },
+      { id: 'd9', name: 'Blender 3D Modeling', dates: 'Jan 3 – Jan 7', deliverable: 'Isometric Cyber Workstation 3D Render', link: 'https://www.blender.org/support/tutorials/', tasks: ['Viewport navigation, mesh editing & modifiers', 'Lighting, materials & camera framing', 'Render final high-res PNG showcase'] },
+      { id: 'd10', name: 'Ambient & Indie Beat-Making', dates: 'Jan 8 – Jan 10', deliverable: '2 Original Atmospheric Instrumental Tracks', link: 'https://learningmusic.ableton.com/', tasks: ['Reverb-drenched guitar/synth chord progressions', 'Minimalist indie drum groove & bassline', 'Export mastered WAV/MP3 stems'] },
+      { id: 'd11', name: 'Technical Video Editing', dates: 'Jan 10 – Jan 12', deliverable: '60-Second Faceless Code & Cyber Lab Showcase Reel', link: 'https://www.blackmagicdesign.com/products/davinciresolve', tasks: ['Record crisp macOS screen captures', 'Cut paced timeline with clean captions & SFX', 'Export 1080p/4K vertical & widescreen edits'] },
+      { id: 'd12', name: 'AI Workflows & Automation', dates: 'Jan 12 – Jan 14', deliverable: 'Automated Markdown Study & Repo Summarizer Workflow', link: 'https://docs.anthropic.com/', tasks: ['Structured prompt engineering & tool-use pipelines', 'Automate documentation & commit summaries', 'Integrate AI workflow into daily study stack'] },
+      { id: 'd13', name: 'Portfolio & Monetization Launch', dates: 'Jan 14 – Jan 15', deliverable: 'Live Portfolio Hub + 15 Targeted Remote Applications', link: 'https://remotive.com/', tasks: ['Polish GitHub profile README & pin top 6 repos', 'Submit 15 async/no-cam remote applications', 'Publish open-source command center template'] }
+    ];
+
+    const DAYS_DATA = [
+      [1, 'Sat, Dec 5', 'Phase 1', 'C++ & Setup', 'macOS Clang Setup & LearnCpp Ch 0–1', 'LearnCpp', 'https://www.learncpp.com/', ['Configure VS Code C++20 build task on Mac', 'Complete LearnCpp Ch 1 exercises & push to Git']],
+      [2, 'Sun, Dec 6', 'Phase 1', 'C++', 'Variables, Types & Console I/O Drills', 'LearnCpp', 'https://www.learncpp.com/', ['Study fundamental data types & const correctness', 'Build CLI unit converter without math headers']],
+      [3, 'Mon, Dec 7', 'Phase 1', 'C++', 'Functions, Header Files & Multi-File Builds', 'LearnCpp', 'https://www.learncpp.com/', ['Split C++ code across .h and .cpp files', 'Compile multi-file build using clang++ -std=c++20']],
+      [4, 'Tue, Dec 8', 'Phase 1', 'C++', 'Control Flow, Loops & Input Validation', 'LearnCpp', 'https://www.learncpp.com/', ['Master switch, loops & std::cin error recovery', 'Build CLI menu state machine']],
+      [5, 'Wed, Dec 9', 'Phase 1', 'C++', 'References, Pointers & Memory Model', 'LearnCpp', 'https://www.learncpp.com/', ['Trace stack vs heap & pass-by-const-reference', 'Write pointer & reference practice drills']],
+      [6, 'Thu, Dec 10', 'Phase 1', 'C++', 'Structs, Enums & std::vector Mastery', 'LearnCpp', 'https://www.learncpp.com/', ['Design custom structs & scoped enums', 'Build dynamic record manager with std::vector']],
+      [7, 'Fri, Dec 11', 'Phase 1', 'C++', 'File I/O (std::fstream) & Persistence', 'LearnCpp', 'https://www.learncpp.com/', ['Read/write structured CSV/text logs with fstream', 'Add save/load persistence to CLI project']],
+      [8, 'Sat, Dec 12', 'Phase 1', 'C++', 'C++ Capstone Build Day 1', 'GitHub', 'https://github.com/', ['Architect Security Log Analyzer in C++20', 'Implement keyword & port filtering']],
+      [9, 'Sun, Dec 13', 'Phase 1', 'C++', 'C++ Capstone Polish & Repo Release', 'GitHub', 'https://github.com/', ['Test edge cases & zero compiler warnings', 'Push C++ capstone with README to GitHub']],
+      [10, 'Mon, Dec 14', 'Phase 2', 'Web & Git', 'Semantic HTML5 & Modern CSS Grid', 'The Odin Project', 'https://www.theodinproject.com/', ['Build responsive bento layout structure', 'Master CSS custom properties & flexbox']],
+      [11, 'Tue, Dec 15', 'Phase 2', 'Web & Git', 'JavaScript ES6+, DOM & State Management', 'MDN Web Docs', 'https://developer.mozilla.org/', ['Build dynamic DOM rendering & event delegation', 'Implement LocalStorage state synchronization']],
+      [12, 'Wed, Dec 16', 'Phase 2', 'Web & Git', 'Async JS, Fetch API & JSON Pipelines', 'MDN Web Docs', 'https://developer.mozilla.org/', ['Practice async/await & error handling', 'Add JSON backup export/import to web app']],
+      [13, 'Thu, Dec 17', 'Phase 2', 'Git & Netlify', 'Git Branching, Rebasing & Live Deployment', 'Learn Git Branching', 'https://learngitbranching.js.org/', ['Complete interactive branching levels', 'Verify auto-deploy pipeline on Netlify']],
+      [14, 'Fri, Dec 18', 'Phase 2', 'Java OOP', 'Java Classes, Constructors & Encapsulation', 'Dev.java', 'https://dev.java/learn/', ['Set up clean Java workspace in VS Code', 'Build core domain classes with clean encapsulation']],
+      [15, 'Sat, Dec 19', 'Phase 2', 'Java OOP', 'Inheritance, Interfaces & Polymorphism', 'Dev.java', 'https://dev.java/learn/', ['Implement interface-driven service architecture', 'Write polymorphic collection handlers']],
+      [16, 'Sun, Dec 20', 'Phase 2', 'Java OOP', 'Java Collections, Exceptions & File I/O', 'Dev.java', 'https://dev.java/learn/', ['Use ArrayList, HashMap & custom exceptions', 'Persist application state to disk']],
+      [17, 'Mon, Dec 21', 'Phase 2', 'Java OOP', 'Java OOP Project Ship & Documentation', 'GitHub', 'https://github.com/', ['Finalize Java OOP capstone & test execution', 'Push clean codebase to GitHub']],
+      [18, 'Tue, Dec 22', 'Phase 3', 'DSA', 'Big-O Complexity, Arrays & Hashing', 'NeetCode', 'https://neetcode.io/', ['Analyze time/space complexity', 'Solve 4 array & hash-map problems in C++']],
+      [19, 'Wed, Dec 23', 'Phase 3', 'DSA', 'Two Pointers & Sliding Window', 'NeetCode', 'https://neetcode.io/', ['Master fixed & dynamic sliding windows', 'Solve 4 pointer/window problems in C++']],
+      [20, 'Thu, Dec 24', 'Phase 3', 'DSA', 'Stacks, Queues & Linked Lists', 'NeetCode', 'https://neetcode.io/', ['Implement stack/queue & pointer reversal', 'Solve 5 linear structure problems in C++']],
+      [21, 'Fri, Dec 25', 'Phase 3', 'DSA & Linux', 'Binary Search + OverTheWire Bandit 0–10', 'OverTheWire', 'https://overthewire.org/wargames/bandit/', ['Solve 4 binary search variations', 'Clear Bandit Levels 0–10 over SSH']],
+      [22, 'Sat, Dec 26', 'Phase 3', 'DSA & Linux', 'Trees/Recursion + Bandit Levels 11–20', 'OverTheWire', 'https://overthewire.org/wargames/bandit/', ['Solve 4 binary tree traversal problems', 'Clear Bandit Levels 11–20 & document commands']],
+      [23, 'Sun, Dec 27', 'Phase 3', 'Networking', 'TCP/IP Stack, Subnetting & DNS', 'Cisco NetAcad', 'https://www.netacad.com/', ['Drill CIDR subnetting & ARP/DNS resolution', 'Map packet flow from browser to server']],
+      [24, 'Mon, Dec 28', 'Phase 3', 'Linux & Bash', 'Bash Scripting & Automated Recon Tool', 'Linux Journey', 'https://linuxjourney.com/', ['Write Bash script parsing Nmap/log outputs', 'Test permissions & cron scheduling']],
+      [25, 'Tue, Dec 29', 'Phase 3', 'Networking', 'Wireshark Packet Capture & Protocol Lab', 'Wireshark Docs', 'https://www.wireshark.org/docs/', ['Analyze HTTP, DNS & TCP 3-way handshakes', 'Write concise lab report for GitHub']],
+      [26, 'Wed, Dec 30', 'Phase 4', 'Cybersecurity', 'TryHackMe Pre-Security & Linux PrivEsc', 'TryHackMe', 'https://tryhackme.com/', ['Complete 2 TryHackMe rooms', 'Take structured enumeration notes']],
+      [27, 'Thu, Dec 31', 'Phase 4', 'Cybersecurity', 'Nmap Enumeration & Service Fingerprinting', 'TryHackMe', 'https://tryhackme.com/', ['Practice Nmap NSE scripts & banner grabbing', 'Log methodology in personal security wiki']],
+      [28, 'Fri, Jan 1', 'Phase 4', 'Cybersecurity', 'Web App Vulns: SQL Injection & XSS Labs', 'PortSwigger Academy', 'https://portswigger.net/web-security', ['Complete 3 SQLi/XSS apprentice labs', 'Document remediation patterns']],
+      [29, 'Sat, Jan 2', 'Phase 4', 'Cybersecurity', 'Authentication Flaws, IDOR & Burp Suite', 'PortSwigger Academy', 'https://portswigger.net/web-security', ['Intercept & modify requests in Burp Community', 'Complete 2 access-control labs']],
+      [30, 'Sun, Jan 3', 'Phase 4', 'Cyber & Blender', 'CTF Challenge + Blender Interface & Mesh Basics', 'HackTheBox', 'https://www.hackthebox.com/', ['Complete 1 beginner CTF machine', 'Model base room geometry in Blender']],
+      [31, 'Mon, Jan 4', 'Phase 4', 'Cyber & Blender', 'Publish CTF Writeups + Blender Modifiers', 'GitHub', 'https://github.com/', ['Push 10 clean CTF writeups to GitHub', 'Add bevel, array & subdivision details in Blender']],
+      [32, 'Tue, Jan 5', 'Phase 4', 'Blender 3D', 'Isometric Cyber Desk Props & Monitors', 'Blender Docs', 'https://docs.blender.org/', ['Model dual monitors, mechanical keyboard & peripherals', 'Organize clean scene collections']],
+      [33, 'Wed, Jan 6', 'Phase 4', 'Blender 3D', 'Materials, Emissive Glows & Studio Lighting', 'Blender Docs', 'https://docs.blender.org/', ['Configure dark moody lighting & cyan screen glow', 'Test Cycles/Eevee render settings']],
+      [34, 'Thu, Jan 7', 'Phase 4', 'Blender 3D', 'Final 3D Render & Portfolio Upload', 'Blender Docs', 'https://docs.blender.org/', ['Render high-resolution isometric desk PNG', 'Add render to portfolio showcase']],
+      [35, 'Fri, Jan 8', 'Phase 5', 'Music Prod', 'Ambient/Indie Chord Progressions & Texture', 'Ableton Learning', 'https://learningmusic.ableton.com/', ['Compose melancholic minor7/add9 progression', 'Layer warm pad & clean reverb guitar tone']],
+      [36, 'Sat, Jan 9', 'Phase 5', 'Music Prod', 'Minimalist Drums, Bass & Arrangement', 'Ableton Learning', 'https://learningmusic.ableton.com/', ['Program understated indie drum groove', 'Arrange & export Track 1']],
+      [37, 'Sun, Jan 10', 'Phase 5', 'Music & Video', 'Track 2 Master + Screen Recording Capture', 'DaVinci Resolve', 'https://www.blackmagicdesign.com/products/davinciresolve', ['Finish second ambient instrumental', 'Capture crisp 1080p macOS coding/CTF footage']],
+      [38, 'Mon, Jan 11', 'Phase 5', 'Video Editing', 'Cut & Pace 60s Tech Showcase Reel', 'DaVinci Resolve', 'https://www.blackmagicdesign.com/products/davinciresolve', ['Sync cuts to ambient beat & add clean overlays', 'Color-balance dark terminal aesthetics']],
+      [39, 'Tue, Jan 12', 'Phase 5', 'Video & AI', 'Export Showcase Video + AI Prompt Pipelines', 'Anthropic Docs', 'https://docs.anthropic.com/', ['Render final MP4 showcase reel', 'Design reusable AI prompts for code review & docs']],
+      [40, 'Wed, Jan 13', 'Phase 5', 'AI Workflows', 'Build Automated Repo & Study Summarizer', 'Anthropic Docs', 'https://docs.anthropic.com/', ['Script markdown note & changelog generator', 'Document AI workflow in GitHub repo']],
+      [41, 'Thu, Jan 14', 'Phase 5', 'Monetization', 'GitHub Profile Polish & Remote Job Batch 1', 'Remotive', 'https://remotive.com/', ['Pin top 6 repositories with visual previews', 'Apply to 8 async/no-cam remote tech roles']],
+      [42, 'Fri, Jan 15', 'Phase 5', 'Monetization', 'Final Sprint Audit & Remote Job Batch 2', 'We Work Remotely', 'https://weworkremotely.com/', ['Apply to 7 more roles on WWR & Himalayas', 'Export final JSON backup of 42-day Command Center']]
+    ];
+
+    const DEFAULT_RESOURCES = [
+      { id: 'r1', title: 'LearnCpp.com Complete Guide', cat: 'C++ & DSA', url: 'https://www.learncpp.com/', note: 'Core modern C++20 chapters & drills' },
+      { id: 'r2', title: 'cppreference.com', cat: 'C++ & DSA', url: 'https://en.cppreference.com/', note: 'Standard library & STL lookup' },
+      { id: 'r3', title: 'NeetCode 150 Roadmap', cat: 'C++ & DSA', url: 'https://neetcode.io/', note: 'Structured DSA pattern practice' },
+      { id: 'r4', title: 'CSES Problem Set', cat: 'C++ & DSA', url: 'https://cses.fi/problemset/', note: 'Algorithmic problem solving' },
+      { id: 'r5', title: 'TryHackMe Learning Paths', cat: 'Cybersecurity', url: 'https://tryhackme.com/', note: 'Pre-Security & Jr Pentester labs' },
+      { id: 'r6', title: 'HackTheBox Academy', cat: 'Cybersecurity', url: 'https://academy.hackthebox.com/', note: 'Hands-on offensive/defensive modules' },
+      { id: 'r7', title: 'OverTheWire: Bandit', cat: 'Linux & Net', url: 'https://overthewire.org/wargames/bandit/', note: 'SSH & Linux command-line wargame' },
+      { id: 'r8', title: 'PortSwigger Web Security Academy', cat: 'Cybersecurity', url: 'https://portswigger.net/web-security', note: 'Free SQLi, XSS, CSRF & auth labs' },
+      { id: 'r9', title: 'Google Cybersecurity Certificate', cat: 'Cybersecurity', url: 'https://www.coursera.org/', note: 'SOC, SIEM, Python & incident response' },
+      { id: 'r10', title: 'PicoCTF Practice Gym', cat: 'Cybersecurity', url: 'https://picoctf.org/', note: 'Beginner-to-intermediate CTF challenges' },
+      { id: 'r11', title: 'The Odin Project (Full-Stack)', cat: 'Web & Git', url: 'https://www.theodinproject.com/', note: 'HTML, CSS, JS & Git projects' },
+      { id: 'r12', title: 'MDN Web Docs', cat: 'Web & Git', url: 'https://developer.mozilla.org/', note: 'Authoritative web standards reference' },
+      { id: 'r13', title: 'Learn Git Branching', cat: 'Web & Git', url: 'https://learngitbranching.js.org/', note: 'Interactive Git visual sandbox' },
+      { id: 'r14', title: 'Netlify Drop & Docs', cat: 'Web & Git', url: 'https://docs.netlify.com/', note: 'Instant static hosting & CI deploys' },
+      { id: 'r15', title: 'Cisco Networking Academy', cat: 'Linux & Net', url: 'https://www.netacad.com/', note: 'Packet Tracer & networking fundamentals' },
+      { id: 'r16', title: 'Linux Journey', cat: 'Linux & Net', url: 'https://linuxjourney.com/', note: 'Filesystem, permissions & networking' },
+      { id: 'r17', title: 'Wireshark User Guide', cat: 'Linux & Net', url: 'https://www.wireshark.org/docs/', note: 'Packet inspection & display filters' },
+      { id: 'r18', title: 'Nmap Official Reference', cat: 'Cybersecurity', url: 'https://nmap.org/book/man.html', note: 'Port scanning & NSE scripting' },
+      { id: 'r19', title: 'Dev.java Official Tutorials', cat: 'Java & CS', url: 'https://dev.java/learn/', note: 'Modern Java OOP & language features' },
+      { id: 'r20', title: 'Harvard CS50x', cat: 'Java & CS', url: 'https://cs50.harvard.edu/x/', note: 'Computer science foundations' },
+      { id: 'r21', title: 'Refactoring Guru (Design Patterns)', cat: 'Java & CS', url: 'https://refactoring.guru/', note: 'Clean OOP architecture patterns' },
+      { id: 'r22', title: 'Blender Official Tutorials', cat: '3D, Audio & AI', url: 'https://www.blender.org/support/tutorials/', note: '3D modeling, shaders & lighting' },
+      { id: 'r23', title: 'Ableton Learning Music', cat: '3D, Audio & AI', url: 'https://learningmusic.ableton.com/', note: 'Interactive beats, chords & arrangement' },
+      { id: 'r24', title: 'DaVinci Resolve Training', cat: '3D, Audio & AI', url: 'https://www.blackmagicdesign.com/products/davinciresolve/training', note: 'Free professional video editing guides' },
+      { id: 'r25', title: 'Anthropic Prompt & Tool Docs', cat: '3D, Audio & AI', url: 'https://docs.anthropic.com/', note: 'Claude API, structured outputs & workflows' },
+      { id: 'r26', title: 'OWASP Top 10', cat: 'Cybersecurity', url: 'https://owasp.org/www-project-top-ten/', note: 'Critical web security risks' },
+      { id: 'r27', title: 'Explainshell.com', cat: 'Linux & Net', url: 'https://explainshell.com/', note: 'Break down complex CLI flags visually' },
+      { id: 'r28', title: 'Regex101', cat: 'Web & Git', url: 'https://regex101.com/', note: 'Test regular expressions for log parsing' },
+      { id: 'r29', title: 'Remotive Remote Jobs', cat: 'Remote Jobs', url: 'https://remotive.com/', note: 'Async tech support, dev & QA listings' },
+      { id: 'r30', title: 'We Work Remotely', cat: 'Remote Jobs', url: 'https://weworkremotely.com/', note: 'Global remote engineering & support roles' },
+      { id: 'r31', title: 'Himalayas Remote Board', cat: 'Remote Jobs', url: 'https://himalayas.app/', note: 'Filter by timezone & async culture' },
+      { id: 'r32', title: 'Good First Issue (Open Source)', cat: 'Web & Git', url: 'https://goodfirstissue.dev/', note: 'Beginner-friendly open-source PRs' },
+      { id: 'r33', title: 'GTFOBins', cat: 'Cybersecurity', url: 'https://gtfobins.github.io/', note: 'Unix binary privilege escalation reference' },
+      { id: 'r34', title: 'CyberChef', cat: 'Cybersecurity', url: 'https://gchq.github.io/CyberChef/', note: 'Encoding, decoding & hash analysis tool' }
+    ];
+
+    const DEFAULT_PROJECTS = [
+      { id: 'p1', title: 'Cyber & Full-Stack Command Center', stack: 'HTML5, CSS3, Vanilla JS, Netlify', desc: '42-day interactive bento roadmap, resource vault & monetization tracker.', status: 'In Progress' },
+      { id: 'p2', title: 'C++20 Security Log Analyzer CLI', stack: 'C++20, Clang, File I/O', desc: 'Parses auth & port scan logs to flag suspicious hosts and export reports.', status: 'Idea' },
+      { id: 'p3', title: 'Console Music Playlist Manager', stack: 'C++, File Persistence', desc: 'Terminal-based playlist organizer with save/load state.', status: 'Shipped' },
+      { id: 'p4', title: 'Billi Baithak Cat Café Front-End', stack: 'HTML5, CSS3', desc: 'Multi-page responsive website for a fictional cat café.', status: 'Shipped' },
+      { id: 'p5', title: 'Linux Automated Recon Script', stack: 'Bash, Nmap, Grep/Awk', desc: 'Single-command enumeration wrapper generating structured markdown notes.', status: 'Idea' },
+      { id: 'p6', title: 'Java OOP Smart Billing & Inventory', stack: 'Java 26, OOP', desc: 'Modular invoice and stock engine with clean exception handling.', status: 'Idea' },
+      { id: 'p7', title: 'Password Entropy & Policy Auditor', stack: 'C++20 / JS', desc: 'Evaluates password strength patterns and common dictionary leaks offline.', status: 'Idea' },
+      { id: 'p8', title: 'Subnet & CIDR Calculator Web Tool', stack: 'JavaScript, HTML/CSS', desc: 'Instant network/broadcast address and host range visualizer.', status: 'Idea' },
+      { id: 'p9', title: 'TryHackMe & HTB Writeup Archive', stack: 'Markdown, GitHub Pages', desc: 'Clean, searchable repository of 10+ security lab walkthroughs.', status: 'In Progress' },
+      { id: 'p10', title: 'Isometric Cyber Workstation 3D Scene', stack: 'Blender 3D', desc: 'Low-poly/stylized dark-mode developer desk render with cyan lighting.', status: 'Idea' },
+      { id: 'p11', title: 'Midnight Ambient Instrumental EP (2 Tracks)', stack: 'DAW, Synth/Guitar', desc: 'Atmospheric indie-ambient beats inspired by late-night coding.', status: 'Idea' },
+      { id: 'p12', title: 'AI Git Commit & Changelog Helper', stack: 'Claude API, CLI', desc: 'Summarizes staged diffs into clean semantic commit messages.', status: 'Idea' },
+      { id: 'p13', title: 'HTTP Security Headers Inspector', stack: 'JavaScript / Node', desc: 'Checks CSP, HSTS, X-Frame-Options and cookie flags.', status: 'Idea' },
+      { id: 'p14', title: 'O Level CS Paper 2 Pseudocode Visualizer', stack: 'HTML, CSS, JS', desc: 'Interactive trace-table helper for tutoring algorithms & logic.', status: 'Idea' },
+      { id: 'p15', title: 'Faceless Dev & Cyber Reel Template Pack', stack: 'DaVinci Resolve', desc: 'Reusable terminal transition & caption presets for tech showcases.', status: 'Idea' }
+    ];
+
+    const MONETIZATION_STREAMS = [
+      {
+        id: 'm1',
+        title: 'Stream 1: Async & No-Cam Remote Roles',
+        tag: 'Remotive • WWR • Himalayas',
+        tasks: [
+          'Filter for text-based Technical Chat Support, AI Data/QA & Moderation roles',
+          'Tailor resume preserving clean layout highlighting C++, web & community moderation',
+          'Submit 15 targeted async applications before Jan 15, 2027'
+        ]
+      },
+      {
+        id: 'm2',
+        title: 'Stream 2: Open Source & Dev Tooling',
+        tag: 'GitHub • Claude OSS',
+        tasks: [
+          'Publish Cyber & Full-Stack Command Center as an open-source template',
+          'Submit 3 clean documentation or bug-fix PRs to beginner-friendly repos',
+          'Document architecture & benchmarks for open-source program applications'
+        ]
+      },
+      {
+        id: 'm3',
+        title: 'Stream 3: Faceless Tech UGC & Micro-Gigs',
+        tag: 'DevRel • Static Sites',
+        tasks: [
+          'Produce 60s screen-recorded tool demos with ambient soundtrack',
+          'Package static Netlify landing page & automation setup offers',
+          'Build outreach list of indie dev tools & cybersecurity startups'
+        ]
+      }
+    ];
+
+    const DEFAULT_APPLICATIONS = [
+      { platform: 'Remotive', role: 'Async Technical Chat Support Specialist', stream: 'Remote Async Roles', date: 'Dec 15, 2026', status: 'Planned' },
+      { platform: 'We Work Remotely', role: 'Junior Web / QA Operations Assistant', stream: 'Remote Async Roles', date: 'Dec 22, 2026', status: 'Planned' },
+      { platform: 'Himalayas', role: 'AI Prompt & Code Evaluator (Async)', stream: 'Remote Async Roles', date: 'Jan 5, 2027', status: 'Planned' }
+    ];
+
+    let state = {
+      checked: {},
+      resources: [...DEFAULT_RESOURCES],
+      projects: [...DEFAULT_PROJECTS],
+      applications: [...DEFAULT_APPLICATIONS]
+    };
+
+    function loadState() {
+      try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          state.checked = parsed.checked || {};
+          if (Array.isArray(parsed.resources) && parsed.resources.length) state.resources = parsed.resources;
+          if (Array.isArray(parsed.projects) && parsed.projects.length) state.projects = parsed.projects;
+          if (Array.isArray(parsed.applications) && parsed.applications.length) state.applications = parsed.applications;
+        }
+      } catch (e) {
+        console.warn('Could not load saved state:', e);
+      }
+    }
+
+    function saveState() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      } catch (e) {
+        console.warn('Could not save state:', e);
+      }
+      updateStats();
+    }
+
+    function toggleTask(taskId) {
+      state.checked[taskId] = !state.checked[taskId];
+      saveState();
+      renderAll();
+    }
+
+    function switchTab(tabName) {
+      document.querySelectorAll('.nav-pill').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.tab === tabName);
+      });
+      document.querySelectorAll('.tab-view').forEach(view => {
+        view.classList.toggle('active', view.id === 'view-' + tabName);
+      });
+    }
+
+    function updateStats() {
+      let total = 0;
+      let done = 0;
+
+      DEFAULT_KICKOFF.forEach(t => {
+        total++;
+        if (state.checked[t.id]) done++;
+      });
+
+      DAYS_DATA.forEach(d => {
+        d[7].forEach((_, idx) => {
+          const id = `day_${d[0]}_${idx}`;
+          total++;
+          if (state.checked[id]) done++;
+        });
+      });
+
+      DISCIPLINES.forEach(disc => {
+        disc.tasks.forEach((_, idx) => {
+          const id = `disc_${disc.id}_${idx}`;
+          total++;
+          if (state.checked[id]) done++;
+        });
+      });
+
+      MONETIZATION_STREAMS.forEach(m => {
+        m.tasks.forEach((_, idx) => {
+          const id = `mon_${m.id}_${idx}`;
+          total++;
+          if (state.checked[id]) done++;
+        });
+      });
+
+      let delivDone = 0;
+      DISCIPLINES.forEach(disc => {
+        if (state.checked[`deliv_${disc.id}`]) delivDone++;
+      });
+
+      const pct = total ? Math.round((done / total) * 100) : 0;
+      document.getElementById('globalProgressText').textContent = `OVERALL PROGRESS: ${pct}% (${done}/${total} TASKS)`;
+      document.getElementById('globalProgressFill').style.width = pct + '%';
+      document.getElementById('kpiPercent').textContent = pct + '%';
+      document.getElementById('kpiTaskCount').textContent = `${done} of ${total} tasks completed`;
+      document.getElementById('kpiDeliverables').textContent = `${delivDone} / 13`;
+
+      const rCount = state.resources.length;
+      const pCount = state.projects.length;
+      document.getElementById('vaultCountBadge').textContent = rCount;
+      document.getElementById('vaultHeaderCount').textContent = rCount;
+      document.getElementById('projectCountBadge').textContent = pCount;
+      document.getElementById('projectHeaderCount').textContent = pCount;
+      document.getElementById('kpiAssets').textContent = `${rCount} / ${pCount}`;
+    }
+
+    function renderOverview() {
+      const phases = [
+        { name: 'Phase 1 (Dec 5–13)', desc: 'macOS Clang setup, LearnCpp Ch 0–14 & C++20 CLI Capstone' },
+        { name: 'Phase 2 (Dec 14–21)', desc: 'HTML/CSS/JS Web Stack, Git/Netlify & Java OOP Architecture' },
+        { name: 'Phase 3 (Dec 22–29)', desc: '25 Core DSA Problems, OverTheWire Bandit & Wireshark Labs' },
+        { name: 'Phase 4 (Dec 30–Jan 7)', desc: 'TryHackMe/PortSwigger CTFs + Isometric Blender 3D Render' },
+        { name: 'Phase 5 (Jan 8–15)', desc: 'Ambient Beats, DaVinci Reel, AI Workflows & 15 Remote Apps' }
+      ];
+
+      document.getElementById('phaseOverviewList').innerHTML = phases.map(p => `
+        <li class="task-item" style="cursor:default;">
+          <span class="tag">${p.name}</span>
+          <span>${p.desc}</span>
+        </li>
+      `).join('');
+
+      document.getElementById('kickoffChecklist').innerHTML = DEFAULT_KICKOFF.map(t => {
+        const isDone = !!state.checked[t.id];
+        return `
+          <li class="task-item ${isDone ? 'done' : ''}" onclick="toggleTask('${t.id}')">
+            <input type="checkbox" ${isDone ? 'checked' : ''} onclick="event.stopPropagation(); toggleTask('${t.id}')" />
+            <span>${t.text}</span>
+          </li>
+        `;
+      }).join('');
+    }
+
+    function renderRoadmap() {
+      const query = (document.getElementById('roadmapSearch').value || '').toLowerCase();
+      const phaseFilter = document.getElementById('roadmapPhaseFilter').value;
+
+      const filtered = DAYS_DATA.filter(d => {
+        const matchesPhase = phaseFilter === 'ALL' || d[2] === phaseFilter;
+        const hay = `${d[1]} ${d[2]} ${d[3]} ${d[4]} ${d[5]} ${d[7].join(' ')}`.toLowerCase();
+        return matchesPhase && hay.includes(query);
+      });
+
+      document.getElementById('roadmapGrid').innerHTML = filtered.map(d => {
+        const [num, dateStr, phase, disc, title, resLabel, url, tasks] = d;
+        const tasksHtml = tasks.map((txt, idx) => {
+          const id = `day_${num}_${idx}`;
+          const isDone = !!state.checked[id];
+          return `
+            <li class="task-item ${isDone ? 'done' : ''}" onclick="toggleTask('${id}')">
+              <input type="checkbox" ${isDone ? 'checked' : ''} onclick="event.stopPropagation(); toggleTask('${id}')" />
+              <span>${txt}</span>
+            </li>
+          `;
+        }).join('');
+
+        return `
+          <div class="card">
+            <div style="display:flex; justify-content:space-between; align-items:center; gap:0.5rem; margin-bottom:0.5rem;">
+              <span class="tag">Day ${num} • ${dateStr}</span>
+              <span class="tag tag-purple">${disc}</span>
+            </div>
+            <div style="font-weight:700; font-size:0.95rem;">${title}</div>
+            <ul class="task-list">${tasksHtml}</ul>
+            <a class="ext-link" href="${url}" target="_blank" rel="noopener">Open ${resLabel} ↗</a>
           </div>
-          <pre class="p-3 rounded-lg bg-slate-950 font-mono text-xs text-slate-300">whoami && id
-find / -perm -u=s -type f 2>/dev/null # SUID check
-nmap -sV -sC -T4 10.10.10.x
-tcpdump -i en
+        `;
+      }).join('');
+    }
+
+    function renderVault() {
+      const q = (document.getElementById('vaultSearch').value || '').toLowerCase();
+      const cat = document.getElementById('vaultCatFilter').value;
+
+      const filtered = state.resources.filter(r => {
+        const matchCat = cat === 'ALL' || r.cat === cat;
+        const matchQ = `${r.title} ${r.cat} ${r.note}`.toLowerCase().includes(q);
+        return matchCat && matchQ;
+      });
+
+      document.getElementById('vaultGrid').innerHTML = filtered.map(r => `
+        <div class="card">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
+            <span class="tag tag-purple">${r.cat}</span>
+          </div>
+          <div style="font-weight:700; font-size:0.95rem;">${r.title}</div>
+          <div class="kpi-sub" style="margin-top:0.35rem;">${r.note}</div>
+          <a class="ext-link" href="${r.url}" target="_blank" rel="noopener">Launch Resource ↗</a>
+        </div>
+      `).join('');
+    }
+
+    function cycleProjectStatus(id) {
+      const order = ['Idea', 'In Progress', 'Shipped'];
+      const proj = state.projects.find(p => p.id === id);
+      if (proj) {
+        const nextIdx = (order.indexOf(proj.status) + 1) % order.length;
+        proj.status = order[nextIdx];
+        saveState();
+        renderProjects();
+      }
+    }
+
+    function renderProjects() {
+      document.getElementById('projectsGrid').innerHTML = state.projects.map(p => {
+        const badgeClass = p.status === 'Shipped' ? 'tag-emerald' : (p.status === 'In Progress' ? 'tag-amber' : 'tag');
+        return `
+          <div class="card">
+            <div style="display:flex; justify-content:space-between; align-items:center; gap:0.5rem; margin-bottom:0.5rem;">
+              <span class="tag">${p.stack}</span>
+              <span class="tag ${badgeClass} status-pill" title="Click to cycle status" onclick="cycleProjectStatus('${p.id}')">${p.status}</span>
+            </div>
+            <div style="font-weight:700; font-size:0.96rem;">${p.title}</div>
+            <div class="kpi-sub" style="margin-top:0.4rem;">${p.desc}</div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderBentoDisciplines() {
+      document.getElementById('bentoDisciplineGrid').innerHTML = DISCIPLINES.map(disc => {
+        const doneCount = disc.tasks.filter((_, i) => state.checked[`disc_${disc.id}_${i}`]).length;
+        const pct = Math.round((doneCount / disc.tasks.length) * 100);
+        const tasksHtml = disc.tasks.map((txt, idx) => {
+          const id = `disc_${disc.id}_${idx}`;
+          const isDone = !!state.checked[id];
+          return `
+            <li class="task-item ${isDone ? 'done' : ''}" onclick="toggleTask('${id}')">
+              <input type="checkbox" ${isDone ? 'checked' : ''} onclick="event.stopPropagation(); toggleTask('${id}')" />
+              <span>${txt}</span>
+            </li>
+          `;
+        }).join('');
+
+        return `
+          <div class="card">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.45rem;">
+              <span class="tag">${disc.dates}</span>
+              <span class="tag tag-emerald">${pct}%</span>
+            </div>
+            <div style="font-weight:700; font-size:1rem;">${disc.name}</div>
+            <div class="progress-track" style="margin:0.55rem 0;">
+              <div class="progress-fill" style="width:${pct}%"></div>
+            </div>
+            <ul class="task-list">${tasksHtml}</ul>
+            <a class="ext-link" href="${disc.link}" target="_blank" rel="noopener">Study Resource ↗</a>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderDeliverables() {
+      document.getElementById('deliverablesGrid').innerHTML = DISCIPLINES.map((disc, idx) => {
+        const id = `deliv_${disc.id}`;
+        const isDone = !!state.checked[id];
+        return `
+          <div class="card">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
+              <span class="tag">Deliverable #${idx + 1} • ${disc.dates}</span>
+              <span class="tag ${isDone ? 'tag-emerald' : 'tag-amber'}">${isDone ? 'Shipped' : 'Pending'}</span>
+            </div>
+            <div style="font-weight:700; font-size:0.95rem; margin-bottom:0.4rem;">${disc.name}</div>
+            <label class="task-item ${isDone ? 'done' : ''}">
+              <input type="checkbox" ${isDone ? 'checked' : ''} onchange="toggleTask('${id}')" />
+              <span>${disc.deliverable}</span>
+            </label>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderMonetization() {
+      document.getElementById('monetizationStreams').innerHTML = MONETIZATION_STREAMS.map(m => {
+        const tasksHtml = m.tasks.map((txt, idx) => {
+          const id = `mon_${m.id}_${idx}`;
+          const isDone = !!state.checked[id];
+          return `
+            <li class="task-item ${isDone ? 'done' : ''}" onclick="toggleTask('${id}')">
+              <input type="checkbox" ${isDone ? 'checked' : ''} onclick="event.stopPropagation(); toggleTask('${id}')" />
+              <span>${txt}</span>
+            </li>
+          `;
+        }).join('');
+
+        return `
+          <div class="card">
+            <span class="tag tag-amber" style="margin-bottom:0.5rem;">${m.tag}</span>
+            <div style="font-weight:700; font-size:0.98rem;">${m.title}</div>
+            <ul class="task-list">${tasksHtml}</ul>
+          </div>
+        `;
+      }).join('');
+
+      document.getElementById('applicationTableBody').innerHTML = state.applications.map((a, idx) => `
+        <tr>
+          <td><strong>${a.platform}</strong></td>
+          <td>${a.role}</td>
+          <td><span class="tag">${a.stream}</span></td>
+          <td style="font-family:var(--font-mono); font-size:0.78rem;">${a.date}</td>
+          <td>
+            <span class="tag tag-amber status-pill" onclick="cycleAppStatus(${idx})">${a.status}</span>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function cycleAppStatus(idx) {
+      const order = ['Planned', 'Applied', 'Interview/Task', 'Offer'];
+      const app = state.applications[idx];
+      if (app) {
+        app.status = order[(order.indexOf(app.status) + 1) % order.length];
+        saveState();
+        renderMonetization();
+      }
+    }
+
+    function openModal(id) { document.getElementById(id).classList.add('open'); }
+    function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+    function addResource() {
+      const title = document.getElementById('resTitle').value.trim();
+      const cat = document.getElementById('resCat').value;
+      const url = document.getElementById('resUrl').value.trim() || 'https://github.com/';
+      const note = document.getElementById('resNote').value.trim() || 'Added to Command Center Vault';
+      if (!title) return;
+      state.resources.unshift({ id: 'r_' + Date.now(), title, cat, url, note });
+      document.getElementById('resTitle').value = '';
+      document.getElementById('resUrl').value = '';
+      document.getElementById('resNote').value = '';
+      closeModal('resourceModal');
+      saveState();
+      renderVault();
+    }
+
+    function addProject() {
+      const title = document.getElementById('projTitle').value.trim();
+      const stack = document.getElementById('projStack').value.trim() || 'C++ / Web';
+      const desc = document.getElementById('projDesc').value.trim() || 'Portfolio build item';
+      if (!title) return;
+      state.projects.unshift({ id: 'p_' + Date.now(), title, stack, desc, status: 'Idea' });
+      document.getElementById('projTitle').value = '';
+      document.getElementById('projStack').value = '';
+      document.getElementById('projDesc').value = '';
+      closeModal('projectModal');
+      saveState();
+      renderProjects();
+    }
+
+    function addApplication() {
+      const platform = document.getElementById('appPlatform').value.trim();
+      const role = document.getElementById('appRole').value.trim();
+      const stream = document.getElementById('appStream').value;
+      if (!platform || !role) return;
+      const today = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+      state.applications.unshift({ platform, role, stream, date: today, status: 'Applied' });
+      document.getElementById('appPlatform').value = '';
+      document.getElementById('appRole').value = '';
+      closeModal('appModal');
+      saveState();
+      renderMonetization();
+    }
+
+    function copyText(elementId) {
+      const text = document.getElementById(elementId).innerText;
+      navigator.clipboard.writeText(text);
+    }
+
+    // Pomodoro Timer
+    let timerSeconds = 25 * 60;
+    let timerInterval = null;
+
+    function updateTimerUI() {
+      const m = String(Math.floor(timerSeconds / 60)).padStart(2, '0');
+      const s = String(timerSeconds % 60).padStart(2, '0');
+      document.getElementById('timerDisplay').textContent = `${m}:${s}`;
+    }
+
+    function startTimer() {
+      if (timerInterval) return;
+      timerInterval = setInterval(() => {
+        if (timerSeconds > 0) {
+          timerSeconds--;
+          updateTimerUI();
+        } else {
+          pauseTimer();
+        }
+      }, 1000);
+    }
+
+    function pauseTimer() {
+      clearInterval(timerInterval);
+      timerInterval = null;
+    }
+
+    function resetTimer(mins) {
+      pauseTimer();
+      timerSeconds = mins * 60;
+      updateTimerUI();
+    }
+
+    // Backup & Restore
+    function exportBackup() {
+      const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'cyber-command-center-backup.json';
+      a.click();
+    }
+
+    function importBackup(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = e => {
+        try {
+          const data = JSON.parse(e.target.result);
+          if (data.checked) state.checked = data.checked;
+          if (Array.isArray(data.resources)) state.resources = data.resources;
+          if (Array.isArray(data.projects)) state.projects = data.projects;
+          if (Array.isArray(data.applications)) state.applications = data.applications;
+          saveState();
+          renderAll();
+        } catch (err) {
+          alert('Invalid JSON backup file.');
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    function resetAllData() {
+      if (confirm('Reset all checked tasks and custom additions back to defaults?')) {
+        localStorage.removeItem(STORAGE_KEY);
+        state = {
+          checked: {},
+          resources: [...DEFAULT_RESOURCES],
+          projects: [...DEFAULT_PROJECTS],
+          applications: [...DEFAULT_APPLICATIONS]
+        };
+        renderAll();
+        updateStats();
+      }
+    }
+
+    function renderAll() {
+      renderOverview();
+      renderRoadmap();
+      renderVault();
+      renderProjects();
+      renderBentoDisciplines();
+      renderDeliverables();
+      renderMonetization();
+      updateStats();
+    }
+
+    loadState();
+    renderAll();
+  </script>
+</body>
+</html>
